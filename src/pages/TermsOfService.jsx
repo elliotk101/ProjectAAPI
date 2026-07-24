@@ -10,6 +10,7 @@ function TermsOfService() {
 
   const sections = [
     { titleKey: 'terms.section_medical_title', textKey: 'terms.section_medical_text' },
+    { titleKey: 'terms.section_opendata_title', textKey: 'terms.section_opendata_text' },
     { titleKey: 'terms.section_accuracy_title', textKey: 'terms.section_accuracy_text' },
     { titleKey: 'terms.section_use_title', textKey: 'terms.section_use_text' },
     { titleKey: 'terms.section_ip_title', textKey: 'terms.section_ip_text' },
