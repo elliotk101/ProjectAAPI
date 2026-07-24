@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/i18nProvider';
-import SubscriptionForm from '../components/SubscriptionForm';
 
 const TIMELINE_STEPS = [
   { key: 'introduced', status: 'done', icon: '📝' },
@@ -88,10 +87,7 @@ function BillS634B() {
           </h1>
           <p className="bill-page__hero-subtitle">{t('bill.page_subtitle')}</p>
           <div className="bill-page__hero-actions">
-            <a href="#bill-subscribe-section" className="btn btn--primary btn--lg" id="bill-hero-subscribe">
-              ✉ {t('bill.modal_subscribe')}
-            </a>
-            <button className="btn btn--secondary btn--lg" onClick={handleShare} id="bill-hero-share">
+            <button className="btn btn--primary btn--lg" onClick={handleShare} id="bill-hero-share">
               {copied ? `✓ ${t('bill.share_copied')}` : `🔗 ${t('bill.share_title')}`}
             </button>
           </div>
@@ -199,14 +195,6 @@ function BillS634B() {
         </div>
       </section>
 
-      {/* Subscribe */}
-      <section className="bill-page__section reveal" ref={addRevealRef} id="bill-subscribe-section">
-        <div className="glass-card bill-subscribe-card" style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ marginBottom: 'var(--space-2)' }}>{t('bill.subscribe_title')}</h2>
-          <p style={{ color: 'var(--color-text-secondary)', marginBottom: 'var(--space-6)' }}>{t('bill.subscribe_text')}</p>
-          <SubscriptionForm />
-        </div>
-      </section>
     </div>
   );
 }

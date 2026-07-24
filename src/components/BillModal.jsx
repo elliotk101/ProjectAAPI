@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/i18nProvider';
-import SubscriptionForm from './SubscriptionForm';
 
 function BillModal() {
   const { t } = useI18n();
   const [visible, setVisible] = useState(false);
   const [dontShow, setDontShow] = useState(false);
-  const [showSubscribe, setShowSubscribe] = useState(false);
 
   useEffect(() => {
     try {
@@ -50,20 +48,11 @@ function BillModal() {
 
         <p className="bill-modal__text">{t('bill.modal_text')}</p>
 
-        {!showSubscribe ? (
-          <div className="bill-modal__actions">
-            <Link to="/bill-s634b" className="btn btn--primary" onClick={handleClose} id="bill-modal-learn-more">
-              {t('bill.modal_learn_more')}
-            </Link>
-            <button className="btn btn--secondary" onClick={() => setShowSubscribe(true)} id="bill-modal-subscribe-btn">
-              ✉ {t('bill.modal_subscribe')}
-            </button>
-          </div>
-        ) : (
-          <div className="bill-modal__subscribe">
-            <SubscriptionForm compact />
-          </div>
-        )}
+        <div className="bill-modal__actions">
+          <Link to="/bill-s634b" className="btn btn--primary" onClick={handleClose} id="bill-modal-learn-more">
+            {t('bill.modal_learn_more')}
+          </Link>
+        </div>
 
         <label className="bill-modal__dont-show">
           <input
