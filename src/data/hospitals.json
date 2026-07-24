@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "name": "NYC Health + Hospitals/Elmhurst",
+    "address": "79-01 Broadway, Elmhurst, NY 11373",
+    "borough": "Queens",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": "unknown"
+  },
+  {
+    "id": 2,
+    "name": "NYC Health + Hospitals/Queens",
+    "address": "82-68 164th Street, Jamaica, NY 11432",
+    "borough": "Queens",
+    "coordinator": true,
+    "identification": true,
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 3,
+    "name": "Flushing Hospital Medical Center",
+    "address": "4500 Parsons Boulevard, Flushing, NY 11355",
+    "borough": "Queens",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": true
+  },
+  {
+    "id": 4,
+    "name": "NewYork-Presbyterian Lower Manhattan Hospital",
+    "address": "170 William Street, New York, NY 10038",
+    "borough": "Manhattan",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": true
+  },
+  {
+    "id": 5,
+    "name": "NYC Health + Hospitals/Bellevue",
+    "address": "462 First Avenue, New York, NY 10016",
+    "borough": "Manhattan",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": "unknown"
+  },
+  {
+    "id": 6,
+    "name": "Maimonides Medical Center",
+    "address": "4802 10th Avenue, Brooklyn, NY 11219",
+    "borough": "Brooklyn",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": true
+  },
+  {
+    "id": 7,
+    "name": "NYU Langone Hospital — Brooklyn",
+    "address": "150 55th Street, Brooklyn, NY 11220",
+    "borough": "Brooklyn",
+    "coordinator": true,
+    "identification": true,
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 8,
+    "name": "Mount Sinai Queens",
+    "address": "25-10 30th Avenue, Long Island City, NY 11102",
+    "borough": "Queens",
+    "coordinator": true,
+    "identification": "unknown",
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 9,
+    "name": "NYC Health + Hospitals/Coney Island",
+    "address": "2601 Ocean Parkway, Brooklyn, NY 11235",
+    "borough": "Brooklyn",
+    "coordinator": "unknown",
+    "identification": "unknown",
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 10,
+    "name": "NYC Health + Hospitals/Woodhull",
+    "address": "760 Broadway, Brooklyn, NY 11206",
+    "borough": "Brooklyn",
+    "coordinator": true,
+    "identification": true,
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 11,
+    "name": "NYU Langone Tisch Hospital",
+    "address": "550 First Avenue, New York, NY 10016",
+    "borough": "Manhattan",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": true
+  },
+  {
+    "id": 12,
+    "name": "NYC Health + Hospitals/Lincoln",
+    "address": "234 East 149th Street, Bronx, NY 10451",
+    "borough": "Bronx",
+    "coordinator": true,
+    "identification": true,
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 13,
+    "name": "Staten Island University Hospital",
+    "address": "475 Seaview Avenue, Staten Island, NY 10305",
+    "borough": "Staten Island",
+    "coordinator": true,
+    "identification": "unknown",
+    "materials": "unknown",
+    "training": "unknown"
+  },
+  {
+    "id": 14,
+    "name": "NewYork-Presbyterian Queens",
+    "address": "56-45 Main Street, Flushing, NY 11355",
+    "borough": "Queens",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": true
+  },
+  {
+    "id": 15,
+    "name": "Mount Sinai Beth Israel",
+    "address": "281 First Avenue, New York, NY 10003",
+    "borough": "Manhattan",
+    "coordinator": true,
+    "identification": true,
+    "materials": true,
+    "training": "unknown"
+  }
+]
