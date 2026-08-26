@@ -269,7 +269,7 @@ function HealthMap() {
           🗺️ {t('map.title')}
         </h2>
 
-        <p className="map-data-note">Curated public-health snapshot · verify source dates before use</p>
+        <p className="map-data-note">{t('map.click_prompt')}</p>
 
         {/* Layer toggles */}
         <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>

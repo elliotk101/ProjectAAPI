@@ -31,7 +31,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="navbar" aria-label="Primary navigation">
+    <nav className="navbar" aria-label={t('nav.primary_label')}>
       <div className="navbar__inner">
         <Logo />
         <div id="mobile-navigation" className={`navbar__links ${mobileOpen ? 'navbar__links--open' : ''}`}>
@@ -44,13 +44,13 @@ function Navbar() {
         </div>
         <div className="navbar__right">
           <button type="button" className="text-size-toggle" aria-pressed={largeText}
-            onClick={() => setLargeText((value) => !value)} title="Increase text size">
-            <span aria-hidden="true">A+</span><span className="sr-only">Toggle larger text</span>
+            onClick={() => setLargeText((value) => !value)} title={t('nav.text_size')}>
+            <span aria-hidden="true">A+</span><span className="sr-only">{t('nav.text_size')}</span>
           </button>
           <LanguageSwitcher />
           <button type="button" className="navbar__mobile-toggle" onClick={() => setMobileOpen((value) => !value)}
-            aria-expanded={mobileOpen} aria-controls="mobile-navigation" aria-label="Toggle navigation menu">
-            <span aria-hidden="true">{mobileOpen ? 'Close' : 'Menu'}</span>
+            aria-expanded={mobileOpen} aria-controls="mobile-navigation" aria-label={mobileOpen ? t('nav.close_menu') : t('nav.open_menu')}>
+            <span className={`menu-icon ${mobileOpen ? 'menu-icon--open' : ''}`} aria-hidden="true"><i /><i /><i /></span>
           </button>
         </div>
       </div>

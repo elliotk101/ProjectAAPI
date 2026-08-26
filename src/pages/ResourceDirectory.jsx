@@ -47,7 +47,7 @@ function ResourceDirectory() {
       <div className="section-heading">
         <h1 style={{ fontSize: 'var(--fs-3xl)' }}>{t('directory.title')}</h1>
         <p>{t('directory.subtitle')}</p>
-        <p className="data-note"><strong>{nonprofits.length} featured organizations</strong> · Reviewed August 2026. Call or visit the organization’s website to confirm hours, eligibility, languages, and services.</p>
+        <p className="data-note">{t('directory.subtitle')}</p>
       </div>
 
       {/* Search */}
@@ -97,7 +97,7 @@ function ResourceDirectory() {
 
               <div className="resource-card__contact">
                 {org.phone && <a href={`tel:${org.phone.replace(/[^+\d]/g, '')}`}>Call {org.phone}</a>}
-                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(org.address)}`} target="_blank" rel="noopener noreferrer">Directions</a>
+                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(org.address)}`} target="_blank" rel="noopener noreferrer">{t('nav.map')}</a>
                 {org.website && org.website !== '#' && (
                   <a href={org.website} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-teal-400)' }}>
                     🌐 {t('directory.website')}

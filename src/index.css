@@ -2905,6 +2905,53 @@ a:hover { color: var(--color-coral-dark); }
   .button-row .btn { width: 100%; }.footer__inner { grid-template-columns: 1fr 1fr; }
 }
 
+/* Compact mobile shell: keep every control and translated label inside its box. */
+.navbar__inner > *, .navbar__right, .navbar__links, .bill-banner__inner > *,
+.pathway-card, .fact-grid > *, .compliance-card, .resource-card { min-width: 0; }
+.navbar__link, .btn, .chip, .bill-banner a, .pathway-card a,
+.compliance-card__name, .resource-card__name, h1, h2, h3, p { overflow-wrap: anywhere; }
+.menu-icon { position: relative; display: block; width: 20px; height: 16px; }
+.menu-icon i { position: absolute; left: 0; width: 20px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .18s ease, opacity .18s ease; }
+.menu-icon i:nth-child(1) { top: 0; }.menu-icon i:nth-child(2) { top: 7px; }.menu-icon i:nth-child(3) { top: 14px; }
+.menu-icon--open i:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-icon--open i:nth-child(2) { opacity: 0; }
+.menu-icon--open i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 900px) {
+  .navbar__inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; }
+  .navbar__right { gap: .4rem; }
+  .navbar__links { top: var(--nav-height); max-height: calc(100dvh - var(--nav-height)); overflow-y: auto; }
+  .navbar__link { width: 100%; white-space: normal; }
+}
+
+@media (max-width: 650px) {
+  .navbar__inner { padding-inline: .65rem; }
+  .brand-lockup { min-width: 0; }
+  .brand-lockup__wordmark { font-size: clamp(1rem, 5.2vw, 1.2rem); white-space: nowrap; }
+  .navbar__mobile-toggle { width: 42px; min-width: 42px; padding: 0; }
+  .lang-switcher { width: auto; max-width: 94px; min-width: 0; padding-inline: .3rem; }
+  .lang-switcher select { width: 100%; max-width: 82px; min-width: 0; padding-inline: .1rem; font-size: .78rem; }
+  .bill-banner__actions { min-width: 0; flex-wrap: wrap; gap: .35rem .8rem; }
+  .bill-banner__actions a { white-space: normal; }
+  .home-hero__content, .home-intro, .threshold-callout, .bill-home-card,
+  .bill-page__section, .source-box, .bill-next, .section-heading { padding-inline: 1rem; }
+  .pathway-card { min-height: 0; padding: 1.5rem 1rem; }
+  .pathway-card h2 { margin-top: 1rem; }
+  .button-row { align-items: stretch; }
+  .button-row .btn { min-height: 46px; height: auto; white-space: normal; line-height: 1.25; }
+  .directory__filters { gap: .45rem; }
+  .chip { max-width: 100%; white-space: normal; }
+}
+
+@media (max-width: 360px) {
+  .navbar__inner { padding-inline: .5rem; gap: .3rem; }
+  .brand-lockup__wordmark { font-size: .98rem; }
+  .lang-switcher { max-width: 78px; }
+  .lang-switcher select { max-width: 68px; }
+  .navbar__mobile-toggle { width: 40px; min-width: 40px; }
+  .footer__inner { grid-template-columns: 1fr; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
   .reveal, .fade-stagger > * { opacity: 1 !important; transform: none !important; }

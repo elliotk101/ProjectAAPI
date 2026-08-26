@@ -15,7 +15,7 @@ function Footer() {
           <Link to="/map">{t('nav.map')}</Link><Link to="/compliance">{t('nav.compliance')}</Link>
         </div>
         <div className="footer__col">
-          <h2 className="footer__col-title">Verified sources</h2>
+          <h2 className="footer__col-title">{t('footer.col_resources')}</h2>
           <a href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">NY Senate: S634B</a>
           <a href="https://www.nysenate.gov/legislation/bills/2025/S6288/amendment/B" target="_blank" rel="noreferrer">NY Senate: S6288B</a>
           <a href="https://data.cityofnewyork.us/" target="_blank" rel="noreferrer">NYC Open Data</a>
@@ -26,7 +26,7 @@ function Footer() {
           <Link to="/accessibility">{t('footer.accessibility')}</Link>
         </div>
       </div>
-      <div className="footer__bottom"><span>© {new Date().getFullYear()} {SITE.name}. Community health information, not medical advice.</span></div>
+      <div className="footer__bottom"><span>© {new Date().getFullYear()} {SITE.name}. {t('footer.copyright')}</span></div>
     </footer>
   );
 }

@@ -5,7 +5,8 @@
     "map": "건강 지도",
     "resources": "자원",
     "compliance": "규정 준수",
-    "bill": "S634B 법안",
+    "bill": "법안 안내",
+    "primary_label": "주요 메뉴", "text_size": "큰 글씨 전환", "open_menu": "메뉴 열기", "close_menu": "메뉴 닫기", "select_language": "언어 선택", "language": "언어",
     "tracker": "작업 추적기"
   },
   "hero": {
@@ -234,7 +235,9 @@
     "section_feedback_title": "피드백",
     "section_feedback_text": "이 플랫폼의 접근성에 대한 피드백을 환영합니다. 접근성 장벽이 있으면 오픈 소스 프로젝트 채널을 통해 연락해 주세요."
   },
+  "not_found": { "title": "페이지를 찾을 수 없습니다.", "text": "링크가 오래되었을 수 있습니다. 홈으로 돌아가거나 건강 확인을 시작하세요." },
   "bill": {
+    "verified": "확인일", "official_record": "공식 법안 기록",
     "banner_text": "S634B는 상원과 하원을 통과했으며 주지사의 결정을 기다리고 있습니다. 아직 법률은 아닙니다.",
     "banner_cta": "자세히 알아보기",
     "banner_dismiss": "닫기",

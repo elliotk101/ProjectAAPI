@@ -44,7 +44,7 @@ function RiskScreener() {
 
   if (result) return (
     <section className="screener screener--result" aria-labelledby="screening-result">
-      <div className="screener__intro"><p className="eyebrow">Private educational tool</p><h1 id="screening-result" tabIndex="-1">{copy.result}</h1><p>{copy.explain}</p></div>
+      <div className="screener__intro"><p className="eyebrow">{t('screener.title')}</p><h1 id="screening-result" tabIndex="-1">{copy.result}</h1><p>{copy.explain}</p></div>
       <div className={`guidance-result ${result.discussionRecommended ? 'guidance-result--discuss' : ''}`}>
         <div className="guidance-result__headline"><span aria-hidden="true">{result.discussionRecommended ? '!' : '✓'}</span><h2>{result.discussionRecommended ? copy.discuss : copy.routine}</h2></div>
         <dl className="factor-list">{result.factors.map((factor) => <div key={factor.key}><dt>{factorLabels[factor.key]}{factor.key === 'bmi' && factor.value ? `: ${factor.value}` : ''}</dt><dd className={factor.present ? 'is-present' : ''}>{factor.present ? copy.present : copy.absent}</dd></div>)}</dl>
@@ -55,7 +55,7 @@ function RiskScreener() {
 
   return (
     <section className="screener" aria-labelledby="screener-title">
-      <div className="screener__intro"><p className="eyebrow">About 2 minutes</p><h1 id="screener-title">{t('screener.title')}</h1><p>{copy.intro}</p><p className="privacy-note"><span aria-hidden="true">●</span> {copy.privacy}</p></div>
+      <div className="screener__intro"><p className="eyebrow">{t('hero.badge')}</p><h1 id="screener-title">{t('screener.title')}</h1><p>{copy.intro}</p><p className="privacy-note"><span aria-hidden="true">●</span> {copy.privacy}</p></div>
       <form className="health-check-form" onSubmit={submit} noValidate>
         <fieldset><legend>1. {t('screener.step_age')}</legend><p>{copy.ageHelp}</p><label>{t('screener.age_label')}<input type="number" inputMode="numeric" min="18" max="120" value={data.age} onChange={(e) => update('age', e.target.value)} /></label></fieldset>
         <fieldset><legend>2. {t('screener.step_body')}</legend><p>{copy.bodyHelp}</p>
@@ -70,7 +70,7 @@ function RiskScreener() {
         </fieldset>
         {error && <p className="form-error" role="alert">{error}</p>}
         <button className="btn btn--primary btn--lg" type="submit">{copy.submit}</button>
-        <p className="medical-disclaimer">This tool does not diagnose diabetes, replace laboratory testing, or provide medical advice. Seek urgent care for urgent symptoms.</p>
+        <p className="medical-disclaimer">{t('terms.section_medical_text')}</p>
       </form>
     </section>
   );

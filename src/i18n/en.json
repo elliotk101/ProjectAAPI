@@ -5,7 +5,8 @@
     "map": "Health Map",
     "resources": "Resources",
     "compliance": "Compliance",
-    "bill": "S634B Act",
+    "bill": "Bill Update",
+    "primary_label": "Primary navigation", "text_size": "Toggle larger text", "open_menu": "Open menu", "close_menu": "Close menu", "select_language": "Select language", "language": "Language",
     "tracker": "Task Tracker"
   },
   "hero": {
@@ -234,7 +235,9 @@
     "section_feedback_title": "Feedback",
     "section_feedback_text": "We welcome your feedback on the accessibility of this platform. If you encounter accessibility barriers or have suggestions for improvement, please contact us through our open-source project channels. We take accessibility feedback seriously and aim to respond within 5 business days."
   },
+  "not_found": { "title": "We couldn't find that page.", "text": "The link may be outdated. Return home or start the health check." },
   "bill": {
+    "verified": "Verified", "official_record": "Official bill record",
     "banner_text": "S634B passed the Senate and Assembly and is awaiting the Governor's action. It is not yet law.",
     "banner_cta": "Learn More",
     "banner_dismiss": "Dismiss",

@@ -5,7 +5,8 @@
     "map": "健康地图",
     "resources": "资源",
     "compliance": "合规",
-    "bill": "S634B法案",
+    "bill": "法案动态",
+    "primary_label": "主导航", "text_size": "切换大字体", "open_menu": "打开菜单", "close_menu": "关闭菜单", "select_language": "选择语言", "language": "语言",
     "tracker": "任务跟踪器"
   },
   "hero": {
@@ -234,7 +235,9 @@
     "section_feedback_title": "反馈",
     "section_feedback_text": "欢迎您对本平台的无障碍性提供反馈。如遇到无障碍障碍，请通过我们的开源项目渠道联系我们。"
   },
+  "not_found": { "title": "找不到该页面。", "text": "链接可能已过期。请返回首页或开始健康检查。" },
   "bill": {
+    "verified": "核实日期", "official_record": "官方法案记录",
     "banner_text": "S634B已通过参议院和众议院，正等待州长采取行动，目前尚未成为法律。",
     "banner_cta": "了解更多",
     "banner_dismiss": "关闭",
