@@ -224,6 +224,9 @@ function HealthMap() {
   const [selected, setSelected] = useState(null);
   const [activeLayer, setActiveLayer] = useState('diabetes');
   const [boroughFilter, setBoroughFilter] = useState('All');
+  const [rankingOpen, setRankingOpen] = useState(() =>
+    typeof window === 'undefined' || !window.matchMedia('(max-width: 650px)').matches
+  );
 
   useEffect(() => {
     document.title = `${t('map.title')} — AAPICHECK`;
@@ -461,18 +464,18 @@ function HealthMap() {
         />
 
         {/* Legend / Top-5 ranking (bottom-left overlay) */}
-        <div style={{
-          position: 'absolute', bottom: 'var(--space-4)', left: 'var(--space-4)',
-          zIndex: 800, background: 'rgba(15,14,23,0.92)', backdropFilter: 'blur(12px)',
-          border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-4)', minWidth: 220, maxWidth: 280,
-          fontSize: 'var(--fs-xs)',
-        }}>
-          <div style={{ fontWeight: 700, fontFamily: 'var(--font-heading)', marginBottom: 'var(--space-3)', fontSize: 'var(--fs-sm)' }}>
-            {activeLayer === 'diabetes' && `📊 ${t('map.top_areas')} — ${t('map.layer_diabetes')}`}
-            {activeLayer === 'aapi' && `👥 ${t('map.top_areas')} — ${t('map.layer_aapi')}`}
-            {activeLayer === 'resources' && `📍 ${t('map.top_areas')} — ${t('map.layer_resources')}`}
-          </div>
+        <div className={`map-ranking ${rankingOpen ? 'map-ranking--open' : 'map-ranking--closed'}`}>
+          <button type="button" className="map-ranking__toggle" onClick={() => setRankingOpen((open) => !open)}
+            aria-expanded={rankingOpen} aria-controls="map-ranking-content">
+            <span>
+              {activeLayer === 'diabetes' && `📊 ${t('map.top_areas')} — ${t('map.layer_diabetes')}`}
+              {activeLayer === 'aapi' && `👥 ${t('map.top_areas')} — ${t('map.layer_aapi')}`}
+              {activeLayer === 'resources' && `📍 ${t('map.top_areas')} — ${t('map.layer_resources')}`}
+            </span>
+            <span className="map-ranking__chevron" aria-hidden="true">⌃</span>
+          </button>
+
+          {rankingOpen && <div id="map-ranking-content" className="map-ranking__content">
 
           {sorted.map((n, i) => {
             const val = activeLayer === 'diabetes'
@@ -538,6 +541,7 @@ function HealthMap() {
               </div>
             </div>
           )}
+          </div>}
         </div>
       </div>
     </div>
