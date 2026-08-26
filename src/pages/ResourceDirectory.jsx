@@ -10,7 +10,7 @@ function ResourceDirectory() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   useEffect(() => {
-    document.title = `${t('directory.title')} — AAPI Health Equity`;
+    document.title = `${t('directory.title')} — AAPICHECK`;
   }, [t]);
 
   const filtered = useMemo(() => {
@@ -47,6 +47,7 @@ function ResourceDirectory() {
       <div className="section-heading">
         <h1 style={{ fontSize: 'var(--fs-3xl)' }}>{t('directory.title')}</h1>
         <p>{t('directory.subtitle')}</p>
+        <p className="data-note"><strong>{nonprofits.length} featured organizations</strong> · Reviewed August 2026. Call or visit the organization’s website to confirm hours, eligibility, languages, and services.</p>
       </div>
 
       {/* Search */}
@@ -69,6 +70,7 @@ function ResourceDirectory() {
             key={filter}
             className={`chip ${activeFilter === filter ? 'chip--active' : ''}`}
             onClick={() => setActiveFilter(filter)}
+            aria-pressed={activeFilter === filter}
             id={`filter-${filter.toLowerCase().replace(/\s+/g, '-')}`}
           >
             {filterKey(filter)}
@@ -77,6 +79,7 @@ function ResourceDirectory() {
       </div>
 
       {/* Results */}
+      <p className="result-count" aria-live="polite">Showing {filtered.length} of {nonprofits.length} organizations</p>
       {filtered.length > 0 ? (
         <div className="directory__grid fade-stagger">
           {filtered.map((org) => (
@@ -93,7 +96,8 @@ function ResourceDirectory() {
               </div>
 
               <div className="resource-card__contact">
-                {org.phone && <span>📞 {org.phone}</span>}
+                {org.phone && <a href={`tel:${org.phone.replace(/[^+\d]/g, '')}`}>Call {org.phone}</a>}
+                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(org.address)}`} target="_blank" rel="noopener noreferrer">Directions</a>
                 {org.website && org.website !== '#' && (
                   <a href={org.website} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-teal-400)' }}>
                     🌐 {t('directory.website')}

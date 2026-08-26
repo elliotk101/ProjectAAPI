@@ -1,59 +1,20 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { BILL_STATUS } from '../config/site';
 import { useI18n } from '../i18n/i18nProvider';
 
 function BillBanner() {
   const { t } = useI18n();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      const dismissed = localStorage.getItem('aapi-bill-banner-dismissed');
-      if (dismissed) {
-        const dismissedAt = new Date(dismissed).getTime();
-        const sevenDays = 7 * 24 * 60 * 60 * 1000;
-        if (Date.now() - dismissedAt < sevenDays) {
-          return; // Still within cooldown
-        }
-      }
-      setVisible(true);
-    } catch {
-      setVisible(true);
-    }
-  }, []);
-
-  const handleDismiss = () => {
-    setVisible(false);
-    try {
-      localStorage.setItem('aapi-bill-banner-dismissed', new Date().toISOString());
-    } catch {
-      // ignore
-    }
-  };
-
-  if (!visible) return null;
-
   return (
-    <div className="bill-banner" role="banner" id="bill-banner">
+    <aside className="bill-banner" aria-label="S634B legislative update">
       <div className="bill-banner__inner">
-        <span className="bill-banner__text">
-          {t('bill.banner_text')}
-        </span>
+        <p>{t('bill.banner_text')}</p>
         <div className="bill-banner__actions">
-          <Link to="/bill-s634b" className="bill-banner__cta" id="bill-banner-cta">
-            {t('bill.banner_cta')} →
-          </Link>
-          <button
-            className="bill-banner__dismiss"
-            onClick={handleDismiss}
-            aria-label={t('bill.banner_dismiss')}
-            id="bill-banner-dismiss"
-          >
-            ✕
-          </button>
+          <span>Verified {BILL_STATUS.lastVerified}</span>
+          <Link to="/bill-s634b">{t('bill.banner_cta')}</Link>
+          <a href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">Official bill record <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

@@ -9,13 +9,13 @@
     "tracker": "Task Tracker"
   },
   "hero": {
-    "badge": "AAPI Health Equity Initiative",
-    "title_1": "Diabetes Screening",
-    "title_2": "Reimagined for",
-    "title_3": "AAPI Communities",
-    "subtitle": "AAPI adults develop type 2 diabetes at BMI 23 — not 25. Our culturally-tailored screening tool, community resources, and health data empower you to take control.",
-    "cta_screen": "Check My Risk",
-    "cta_resources": "Find Resources",
+    "badge": "A New York Health Initiative",
+    "title_1": "Know your risk.",
+    "title_2": "Screen earlier.",
+    "title_3": "",
+    "subtitle": "Clear, culturally relevant diabetes screening guidance and trusted community resources for Asian American and Pacific Islander New Yorkers.",
+    "cta_screen": "Start My Health Check",
+    "cta_resources": "Find Local Help",
     "cta_map": "Explore the Map"
   },
   "stats": {
@@ -31,15 +31,15 @@
     "screening_title": "Culturally-Tailored Screening",
     "screening_desc": "Using the ADA-recommended BMI ≥23 threshold for AAPI populations instead of the standard ≥25 cutoff. Our risk calculator considers ethnicity sub-groups, waist circumference, and family history patterns specific to AAPI communities.",
     "data_title": "NYC Health Data Integration",
-    "data_desc": "Real-time data from the NYC Community Health Survey and Open Data API, visualized on an interactive map to identify high-risk neighborhoods and track diabetes prevalence across all five boroughs.",
+    "data_desc": "A curated view of public NYC Community Health Survey data. Check the source date before using it for planning or care decisions.",
     "resources_title": "Multilingual Community Resources",
-    "resources_desc": "A directory of 150+ AAPI-serving nonprofits funded by the $54.35M Equity Budget, with support in 20+ languages. Plus a hospital language compliance tracker to ensure your rights under the new Hospital Language Access Law."
+    "resources_desc": "A featured directory of 30 AAPI-serving organizations plus a plain-language hospital language assistance guide. Confirm services directly before visiting."
   },
   "landing": {
     "cta_title_1": "Screen at",
     "cta_title_2": "23",
     "cta_title_3": ", Not 25",
-    "cta_text": "The ADA recommends diabetes screening for AAPI adults starting at BMI 23. Don't wait until 25 — early detection can prevent or delay type 2 diabetes.",
+    "cta_text": "BMI 23 is a recognized threshold for considering diabetes screening in Asian American adults. Ask a healthcare professional how it applies to you.",
     "cta_button": "Take the Screener Now →"
   },
   "screener": {
@@ -140,7 +140,7 @@
   },
   "directory": {
     "title": "Community Resource Directory",
-    "subtitle": "AAPI-serving organizations funded by the $54.35M Equity Budget across New York.",
+    "subtitle": "A curated starting point for finding AAPI-serving organizations in New York City.",
     "search_placeholder": "Search by name, service, or language...",
     "filter_all": "All",
     "filter_healthcare": "Healthcare",
@@ -176,16 +176,16 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "accessibility": "Accessibility",
-    "copyright": "AAPI Health Equity Project. Open source for community benefit."
+    "copyright": "AAPICHECK. Open source for community benefit."
   },
   "privacy": {
     "title": "Privacy Policy",
     "last_updated": "Last Updated: July 2026",
-    "intro": "AAPI Health Equity (\"we\", \"us\", \"our\") is committed to protecting your privacy. This policy explains how we handle your information when you use our platform.",
+    "intro": "AAPICHECK (\"we\", \"us\", \"our\") is committed to protecting your privacy. This policy explains how information is handled when you use the site.",
     "section_collection_title": "Information We Collect",
-    "section_collection_text": "Our diabetes risk screener processes health data (age, height, weight, waist circumference, family history, ethnicity) entirely in your browser. This data is never sent to any server. We do not collect personally identifiable information unless you voluntarily provide it through our subscription forms.",
+    "section_collection_text": "The health check processes age, height, weight, family history, gestational diabetes history, and activity answers entirely in your browser. These answers are not sent to our server, retained, or used to create a medical risk score. AAPICHECK does not currently operate an email subscription form.",
     "section_storage_title": "Local Storage",
-    "section_storage_text": "We use your browser's local storage to save your language preference and notification settings. This data stays on your device and is not transmitted to us.",
+    "section_storage_text": "We use local storage for language, measurement unit, larger-text, and optional task-tracker preferences. This information stays on your device and can be cleared in browser settings.",
     "section_analytics_title": "Analytics & Cookies",
     "section_analytics_text": "We do not use tracking cookies or third-party analytics services. Your browsing activity on this platform is not monitored or recorded.",
     "section_health_title": "Health Data Disclaimer",
@@ -200,7 +200,7 @@
   "terms": {
     "title": "Terms of Service",
     "last_updated": "Last Updated: July 2026",
-    "intro": "By using the AAPI Health Equity platform, you agree to the following terms and conditions.",
+    "intro": "By using AAPICHECK, you agree to the following terms and conditions.",
     "section_medical_title": "Medical Disclaimer",
     "section_medical_text": "This platform provides health information and a diabetes risk screening tool for educational purposes only. The risk screener is not a medical diagnosis. Results should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical concerns.",
     "section_opendata_title": "Open Data & Third-Party Information",
@@ -219,7 +219,7 @@
   "a11y": {
     "title": "Accessibility Statement",
     "last_updated": "Last Updated: July 2026",
-    "intro": "The AAPI Health Equity Project is committed to ensuring digital accessibility for people of all abilities. We continually improve the user experience for everyone and apply the relevant accessibility standards.",
+    "intro": "AAPICHECK is committed to ensuring digital accessibility for people of all abilities. We continually improve the experience and apply relevant accessibility standards.",
     "section_standards_title": "Conformance Standards",
     "section_standards_text": "We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA. These guidelines define how to make web content more accessible to people with disabilities.",
     "section_features_title": "Accessibility Features",
@@ -235,11 +235,11 @@
     "section_feedback_text": "We welcome your feedback on the accessibility of this platform. If you encounter accessibility barriers or have suggestions for improvement, please contact us through our open-source project channels. We take accessibility feedback seriously and aim to respond within 5 business days."
   },
   "bill": {
-    "banner_text": "🎉 The Screen at 23 Act (S634B) has passed the Senate & Assembly! Free diabetes screenings at BMI 23 are coming for NYC residents.",
+    "banner_text": "S634B passed the Senate and Assembly and is awaiting the Governor's action. It is not yet law.",
     "banner_cta": "Learn More",
     "banner_dismiss": "Dismiss",
     "modal_title": "The Screen at 23 Act Just Passed!",
-    "modal_text": "New York's Bill S634B will require health insurers to cover diabetes screenings at BMI ≥23 for AAPI populations — with zero out-of-pocket costs. This is a historic win for health equity.",
+    "modal_text": "S634B passed both chambers and is awaiting the Governor's action. If signed, certain New York-regulated commercial policies would cover eligible screening without cost-sharing.",
     "modal_learn_more": "Learn More About S634B",
     "modal_subscribe": "Subscribe for Updates",
     "modal_dismiss": "Don't show this again",
@@ -260,7 +260,7 @@
     "benefit_screening_title": "Free Screenings at BMI 23",
     "benefit_screening_desc": "Diabetes screening will be covered with no copay, coinsurance, or deductible when your BMI is 23 or above — the medically appropriate threshold for AAPI populations.",
     "benefit_insurance_title": "Insurance Coverage Guarantee",
-    "benefit_insurance_desc": "All New York health insurance policies will be required to cover these screenings, removing financial barriers to early detection.",
+    "benefit_insurance_desc": "If signed, certain New York-regulated commercial policies would cover eligible screening without cost-sharing. Confirm whether your plan is covered.",
     "benefit_care_title": "Culturally-Appropriate Standards",
     "benefit_care_desc": "Healthcare providers will follow evidence-based guidelines specifically developed for AAPI populations, recognizing the different risk profiles across ethnic sub-groups.",
     "benefit_outreach_title": "Community Outreach",
@@ -276,7 +276,7 @@
     "prepare_step4_desc": "Share this information with your family and community so more people can benefit from free screenings.",
     "faq_title": "Frequently Asked Questions",
     "faq_q1": "When will the bill take effect?",
-    "faq_a1": "The bill is currently awaiting the Governor's signature. Once signed, insurers will have a compliance period (typically 90-180 days) to update their coverage policies.",
+    "faq_a1": "The bill is awaiting the Governor's action. If signed, its requirements would apply according to the final enacted text; no separate 90–180 day period is stated in the current bill text.",
     "faq_q2": "Who is eligible for free screenings?",
     "faq_a2": "The bill covers diabetes and pre-diabetes screenings for individuals whose BMI is 23 or above, based on evidence-based guidelines for AAPI populations. It applies to anyone covered by a New York health insurance policy.",
     "faq_q3": "What screenings are covered?",
@@ -337,9 +337,9 @@
       "t3_title": "Request Language Assistance Coordinator under S6288B",
       "t3_desc": "When visiting hospital or clinic, exercise your legal right under Hospital Language Access Law to get free interpreter service.",
       "t4_title": "Connect with Local Funded AAPI Non-Profit (CBO)",
-      "t4_desc": "Find an organization from our 150+ CBO directory (such as SACSS or MinKwon) for culturally tailored wellness support.",
+      "t4_desc": "Find a featured organization in our 30-entry directory and verify services directly before visiting.",
       "t5_title": "Verify Insurance Coverage for BMI ≥23 Screening",
-      "t5_desc": "Confirm zero out-of-pocket cost coverage for diabetes screening under S634B Screen at 23 Act guidelines.",
+      "t5_desc": "Check the official S634B status. If it becomes law, ask your insurer whether your policy and screening are covered.",
       "t6_title": "Track Waist Circumference and Physical Activity",
       "t6_desc": "Log weekly active minutes (aim for 150 mins/week) and monitor waist measurement (cutoffs: 90cm men, 80cm women).",
       "t7_title": "Adopt Culturally Tailored Dietary Adjustments",

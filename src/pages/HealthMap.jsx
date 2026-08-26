@@ -226,7 +226,7 @@ function HealthMap() {
   const [boroughFilter, setBoroughFilter] = useState('All');
 
   useEffect(() => {
-    document.title = `${t('map.title')} — AAPI Health Equity`;
+    document.title = `${t('map.title')} — AAPICHECK`;
   }, [t]);
 
   const boroughs = ['All', 'Queens', 'Brooklyn', 'Manhattan', 'Bronx', 'Staten Island'];
@@ -238,8 +238,12 @@ function HealthMap() {
 
   const filteredResources = useMemo(() => {
     if (boroughFilter === 'All') return HEALTH_RESOURCES;
-    // Filter resources by proximity to filtered neighborhoods
-    return HEALTH_RESOURCES;
+    return HEALTH_RESOURCES.filter((resource) => {
+      if (/Manhattan|Chinatown/i.test(resource.address)) return boroughFilter === 'Manhattan';
+      if (/Brooklyn/i.test(resource.address)) return boroughFilter === 'Brooklyn';
+      if (/Flushing|Elmhurst|Astoria|Bayside|Woodside|Jamaica/i.test(resource.address)) return boroughFilter === 'Queens';
+      return false;
+    });
   }, [boroughFilter]);
 
   // Sorted neighborhoods for the legend / ranking
@@ -265,6 +269,8 @@ function HealthMap() {
           🗺️ {t('map.title')}
         </h2>
 
+        <p className="map-data-note">Curated public-health snapshot · verify source dates before use</p>
+
         {/* Layer toggles */}
         <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
           {layers.map((layer) => (
@@ -272,6 +278,7 @@ function HealthMap() {
               key={layer.key}
               className={`chip ${activeLayer === layer.key ? 'chip--active' : ''}`}
               onClick={() => { setActiveLayer(layer.key); setSelected(null); }}
+              aria-pressed={activeLayer === layer.key}
               id={`layer-${layer.key}`}
             >
               {layer.icon} {layer.label}
@@ -286,6 +293,7 @@ function HealthMap() {
               key={b}
               className={`chip ${boroughFilter === b ? 'chip--active' : ''}`}
               onClick={() => setBoroughFilter(b)}
+              aria-pressed={boroughFilter === b}
               style={{ fontSize: 'var(--fs-xs)', padding: 'var(--space-1) var(--space-3)' }}
               id={`borough-filter-${b.toLowerCase().replace(/\s/g, '-')}`}
             >
@@ -479,12 +487,12 @@ function HealthMap() {
               : n.resources === 0 ? '#ef4444' : '#22c55e';
 
             return (
-              <div
+              <button type="button"
                 key={n.id}
                 style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: '4px 0', borderBottom: i < sorted.length - 1 ? '1px solid var(--color-border)' : 'none',
-                  cursor: 'pointer',
+                  cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'inherit',
                 }}
                 onClick={() => setSelected(n)}
               >
@@ -493,7 +501,7 @@ function HealthMap() {
                   {n.name}
                 </span>
                 <span style={{ fontWeight: 600, color, whiteSpace: 'nowrap', marginLeft: 8 }}>{val}</span>
-              </div>
+              </button>
             );
           })}
 

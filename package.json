@@ -1,13 +1,14 @@
 {
-  "name": "aapi-health-equity",
+  "name": "aapicheck",
   "private": true,
   "version": "1.0.0",
-  "description": "AAPI Digital Diabetes Prevention & Health Equity Tool",
+  "description": "AAPICHECK — clear diabetes screening guidance and community resources for AAPI New Yorkers",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test"
   },
   "dependencies": {
     "react": "^19.1.0",

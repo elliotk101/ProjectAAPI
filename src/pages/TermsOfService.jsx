@@ -5,7 +5,7 @@ function TermsOfService() {
   const { t } = useI18n();
 
   useEffect(() => {
-    document.title = `${t('terms.title')} — AAPI Health Equity`;
+    document.title = `${t('terms.title')} — AAPICHECK`;
   }, [t]);
 
   const sections = [

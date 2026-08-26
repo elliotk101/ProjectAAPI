@@ -20,7 +20,8 @@ const bundles = { en, bn, zh, ko, ur };
 export function I18nProvider({ children }) {
   const [lang, setLang] = useState(() => {
     try {
-      return localStorage.getItem('aapi-lang') || 'en';
+      const saved = localStorage.getItem('aapicheck-language') || localStorage.getItem('aapi-lang');
+      return LANGUAGES.some((item) => item.code === saved) ? saved : 'en';
     } catch {
       return 'en';
     }
@@ -31,7 +32,7 @@ export function I18nProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('aapi-lang', lang);
+      localStorage.setItem('aapicheck-language', lang);
     } catch {
       // ignore
     }

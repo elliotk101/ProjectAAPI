@@ -5,7 +5,7 @@ function PrivacyPolicy() {
   const { t } = useI18n();
 
   useEffect(() => {
-    document.title = `${t('privacy.title')} — AAPI Health Equity`;
+    document.title = `${t('privacy.title')} — AAPICHECK`;
   }, [t]);
 
   const sections = [
