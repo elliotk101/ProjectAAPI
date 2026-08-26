@@ -26,7 +26,7 @@ function ProcessTaskTracker() {
 
   // Load state from localStorage or initialize defaults
   useEffect(() => {
-    document.title = `${t('tracker.title')} — AAPI Health Equity`;
+    document.title = `${t('tracker.title')} — AAPICHECK`;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {

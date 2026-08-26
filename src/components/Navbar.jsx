@@ -1,56 +1,56 @@
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useI18n } from '../i18n/i18nProvider';
 import LanguageSwitcher from './LanguageSwitcher';
+import Logo from './Logo';
 
 function Navbar() {
   const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [largeText, setLargeText] = useState(() => {
+    try { return localStorage.getItem('aapicheck-text-size') === 'large'; } catch { return false; }
+  });
 
-  const navLinks = [
-    { to: '/', label: t('nav.home') },
-    { to: '/screener', label: t('nav.screener') },
-    { to: '/map', label: t('nav.map') },
-    { to: '/resources', label: t('nav.resources') },
-    { to: '/compliance', label: t('nav.compliance') },
-    { to: '/tracker', label: t('nav.tracker') },
-    { to: '/bill-s634b', label: t('nav.bill'), highlight: true },
+  useEffect(() => {
+    document.documentElement.dataset.textSize = largeText ? 'large' : 'normal';
+    try { localStorage.setItem('aapicheck-text-size', largeText ? 'large' : 'normal'); } catch { /* no-op */ }
+  }, [largeText]);
+
+  useEffect(() => {
+    const closeOnEscape = (event) => event.key === 'Escape' && setMobileOpen(false);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, []);
+
+  const links = [
+    ['/', t('nav.home')],
+    ['/screener', t('nav.screener')],
+    ['/resources', t('nav.resources')],
+    ['/map', t('nav.map')],
+    ['/bill-s634b', t('nav.bill')],
   ];
 
   return (
-    <nav className="navbar" role="navigation" aria-label="Main navigation">
+    <nav className="navbar" aria-label="Primary navigation">
       <div className="navbar__inner">
-        <Link to="/" className="navbar__logo" aria-label="AAPI Health Equity Home">
-          <div className="navbar__logo-icon">A</div>
-          <span>AAPI Health</span>
-        </Link>
-
-        <div className={`navbar__links ${mobileOpen ? 'navbar__links--open' : ''}`}>
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              end={link.to === '/'}
-              className={({ isActive }) =>
-                `navbar__link ${isActive ? 'navbar__link--active' : ''} ${link.highlight ? 'navbar__link--highlight' : ''}`
-              }
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.highlight && <span className="navbar__pulse-dot" />}
-              {link.label}
+        <Logo />
+        <div id="mobile-navigation" className={`navbar__links ${mobileOpen ? 'navbar__links--open' : ''}`}>
+          {links.map(([to, label]) => (
+            <NavLink key={to} to={to} end={to === '/'} onClick={() => setMobileOpen(false)}
+              className={({ isActive }) => `navbar__link ${isActive ? 'navbar__link--active' : ''}`}>
+              {label}
             </NavLink>
           ))}
         </div>
-
         <div className="navbar__right">
+          <button type="button" className="text-size-toggle" aria-pressed={largeText}
+            onClick={() => setLargeText((value) => !value)} title="Increase text size">
+            <span aria-hidden="true">A+</span><span className="sr-only">Toggle larger text</span>
+          </button>
           <LanguageSwitcher />
-          <button
-            className="navbar__mobile-toggle"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-expanded={mobileOpen}
-            aria-label="Toggle navigation menu"
-          >
-            {mobileOpen ? '✕' : '☰'}
+          <button type="button" className="navbar__mobile-toggle" onClick={() => setMobileOpen((value) => !value)}
+            aria-expanded={mobileOpen} aria-controls="mobile-navigation" aria-label="Toggle navigation menu">
+            <span aria-hidden="true">{mobileOpen ? 'Close' : 'Menu'}</span>
           </button>
         </div>
       </div>

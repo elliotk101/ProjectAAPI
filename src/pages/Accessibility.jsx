@@ -5,7 +5,7 @@ function Accessibility() {
   const { t } = useI18n();
 
   useEffect(() => {
-    document.title = `${t('a11y.title')} — AAPI Health Equity`;
+    document.title = `${t('a11y.title')} — AAPICHECK`;
   }, [t]);
 
   const features = [

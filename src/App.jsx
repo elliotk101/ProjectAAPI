@@ -1,19 +1,22 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BillBanner from './components/BillBanner';
-import BillModal from './components/BillModal';
+import ScrollToTop from './components/ScrollToTop';
 import LandingPage from './pages/LandingPage';
-import RiskScreener from './pages/RiskScreener';
-import HealthMap from './pages/HealthMap';
-import ResourceDirectory from './pages/ResourceDirectory';
-import HospitalCompliance from './pages/HospitalCompliance';
-import ProcessTaskTracker from './pages/ProcessTaskTracker';
-import BillS634B from './pages/BillS634B';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import Accessibility from './pages/Accessibility';
 import { useI18n } from './i18n/i18nProvider';
+
+const RiskScreener = lazy(() => import('./pages/RiskScreener'));
+const HealthMap = lazy(() => import('./pages/HealthMap'));
+const ResourceDirectory = lazy(() => import('./pages/ResourceDirectory'));
+const HospitalCompliance = lazy(() => import('./pages/HospitalCompliance'));
+const ProcessTaskTracker = lazy(() => import('./pages/ProcessTaskTracker'));
+const BillS634B = lazy(() => import('./pages/BillS634B'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Accessibility = lazy(() => import('./pages/Accessibility'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
   const location = useLocation();
@@ -24,11 +27,12 @@ function App() {
 
   return (
     <div dir={dir}>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <ScrollToTop />
       <Navbar />
       <BillBanner />
-      <BillModal />
-      <main>
-        <Routes>
+      <main id="main-content" tabIndex="-1">
+        <Suspense fallback={<div className="page-loader" role="status">Loading…</div>}><Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/screener" element={<RiskScreener />} />
           <Route path="/map" element={<HealthMap />} />
@@ -39,7 +43,8 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/accessibility" element={<Accessibility />} />
-        </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes></Suspense>
       </main>
       {!isMapPage && <Footer />}
     </div>

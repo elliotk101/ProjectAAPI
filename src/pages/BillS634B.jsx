@@ -1,201 +1,43 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useI18n } from '../i18n/i18nProvider';
-
-const TIMELINE_STEPS = [
-  { key: 'introduced', status: 'done', icon: '📝' },
-  { key: 'senate', status: 'done', icon: '🏛️' },
-  { key: 'assembly', status: 'done', icon: '⚖️' },
-  { key: 'governor', status: 'current', icon: '✍️' },
-];
-
-const BENEFITS = [
-  { key: 'screening', icon: '🩺', color: 'var(--color-teal-400)' },
-  { key: 'insurance', icon: '🛡️', color: 'var(--color-indigo-400)' },
-  { key: 'care', icon: '🤝', color: 'var(--color-amber-400)' },
-  { key: 'outreach', icon: '📢', color: 'var(--color-risk-low)' },
-];
-
-const PREPARE_STEPS = [
-  { key: 'step1', icon: '📊', num: '01' },
-  { key: 'step2', icon: '👨‍⚕️', num: '02' },
-  { key: 'step3', icon: '📋', num: '03' },
-  { key: 'step4', icon: '📣', num: '04' },
-];
+import { BILL_STATUS, SITE } from '../config/site';
 
 function BillS634B() {
-  const { t } = useI18n();
-  const [openFaq, setOpenFaq] = useState(null);
   const [copied, setCopied] = useState(false);
-  const revealRefs = useRef([]);
+  useEffect(() => { document.title = `S634B update — ${SITE.name}`; }, []);
 
-  useEffect(() => {
-    document.title = `${t('bill.page_title')} — AAPI Health Equity`;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    revealRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [t]);
-
-  const addRevealRef = (el) => {
-    if (el && !revealRefs.current.includes(el)) {
-      revealRefs.current.push(el);
-    }
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback
-      const input = document.createElement('input');
-      input.value = window.location.href;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const faqs = [1, 2, 3, 4, 5];
+  async function share() {
+    const payload = { title: 'New York S634B update', text: 'See the verified status and plain-language summary of New York bill S634B.', url: window.location.href };
+    if (navigator.share) { try { await navigator.share(payload); return; } catch (error) { if (error.name === 'AbortError') return; } }
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true); window.setTimeout(() => setCopied(false), 2000);
+  }
 
   return (
-    <div className="bill-page page-enter" id="bill-s634b-page">
-      {/* Hero */}
-      <section className="bill-page__hero">
-        <div className="bill-page__hero-content">
-          <span className="hero__badge">✦ {t('bill.status_badge')}</span>
-          <h1>
-            {t('bill.page_title')}
-          </h1>
-          <p className="bill-page__hero-subtitle">{t('bill.page_subtitle')}</p>
-          <div className="bill-page__hero-actions">
-            <button className="btn btn--primary btn--lg" onClick={handleShare} id="bill-hero-share">
-              {copied ? `✓ ${t('bill.share_copied')}` : `🔗 ${t('bill.share_title')}`}
-            </button>
-          </div>
-        </div>
-      </section>
+    <article className="bill-page">
+      <header className="bill-page__hero"><div className="bill-page__hero-content">
+        <p className="eyebrow">New York legislative update</p><h1>Screening coverage bill S634B</h1>
+        <p className="bill-page__hero-subtitle">Passed the New York Senate and Assembly. As of {BILL_STATUS.lastVerified}, it is awaiting the Governor’s action and is not yet law.</p>
+        <div className="status-panel"><span className="status-dot" aria-hidden="true" /><div><strong>Current status: awaiting action</strong><span>Last verified {BILL_STATUS.lastVerified}</span></div></div>
+        <div className="button-row"><a className="btn btn--primary" href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">View official bill record</a><button className="btn btn--secondary" onClick={share}>{copied ? 'Link copied' : 'Share this update'}</button></div>
+      </div></header>
 
-      {/* Timeline */}
-      <section className="bill-page__section reveal" ref={addRevealRef}>
-        <div className="section-heading">
-          <span className="section-heading__badge">✦ {t('bill.timeline_title')}</span>
-          <h2>{t('bill.timeline_title')}</h2>
-        </div>
+      <section className="bill-page__section bill-summary"><div><p className="eyebrow">Plain-language summary</p><h2>What the bill would do if signed</h2></div><div className="prose"><p>S634B would require certain New York-regulated commercial health insurance policies to cover diabetes and prediabetes screening according to nationally recognized, evidence-based clinical practice guidelines, without cost-sharing.</p><p>It would apply to eligible policies or contracts issued, renewed, modified, altered, or amended on or after the law’s effective date. Exact coverage depends on the final enacted text and whether a person’s plan is subject to New York insurance law.</p></div></section>
 
-        <div className="bill-timeline" id="bill-timeline">
-          {TIMELINE_STEPS.map((step, i) => (
-            <div
-              key={step.key}
-              className={`bill-timeline__step bill-timeline__step--${step.status}`}
-            >
-              <div className="bill-timeline__icon">{step.icon}</div>
-              <div className="bill-timeline__connector" />
-              <div className="bill-timeline__content">
-                <h3>{t(`bill.timeline_${step.key}`)}</h3>
-                <p>{t(`bill.timeline_${step.key}_desc`)}</p>
-              </div>
-              {step.status === 'current' && (
-                <span className="bill-timeline__pulse" />
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="bill-page__section"><p className="eyebrow">Four things to know</p><h2>Before you make a healthcare decision</h2><div className="fact-grid">
+        <article><span>01</span><h3>It is not law yet</h3><p>Passing both chambers does not equal the Governor’s signature. We will update this page only after checking the official record.</p></article>
+        <article><span>02</span><h3>Not every plan is the same</h3><p>Federal plans and some self-funded employer plans may follow different rules. Confirm benefits with your insurer.</p></article>
+        <article><span>03</span><h3>BMI 23 is guidance</h3><p>For Asian American adults, BMI 23 is a recognized threshold for considering diabetes screening. A clinician should consider your full health history.</p></article>
+        <article><span>04</span><h3>Care should not wait</h3><p>You can ask a healthcare professional about screening now. Do not delay care while waiting for legislation.</p></article>
+      </div></section>
 
-      {/* Benefits */}
-      <section className="bill-page__section reveal" ref={addRevealRef}>
-        <div className="section-heading">
-          <h2>{t('bill.benefits_title')}</h2>
-        </div>
+      <section className="bill-page__section timeline-simple"><p className="eyebrow">Status timeline</p><h2>Where the bill stands</h2><ol>
+        <li className="is-done"><strong>Introduced and amended</strong><span>Bill text developed in the 2025–2026 session.</span></li><li className="is-done"><strong>Senate passed</strong><span>Approved by the New York State Senate.</span></li><li className="is-done"><strong>Assembly passed</strong><span>Approved by the New York State Assembly.</span></li><li className="is-current"><strong>Governor’s action</strong><span>Awaiting signature, veto, or other official action.</span></li>
+      </ol></section>
 
-        <div className="bill-benefits fade-stagger">
-          {BENEFITS.map((benefit) => (
-            <div className="glass-card bill-benefit-card" key={benefit.key} id={`benefit-${benefit.key}`}>
-              <div className="bill-benefit-card__icon" style={{ background: `${benefit.color}22`, color: benefit.color }}>
-                {benefit.icon}
-              </div>
-              <h3>{t(`bill.benefit_${benefit.key}_title`)}</h3>
-              <p>{t(`bill.benefit_${benefit.key}_desc`)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* How to Prepare */}
-      <section className="bill-page__section reveal" ref={addRevealRef}>
-        <div className="section-heading">
-          <h2>{t('bill.prepare_title')}</h2>
-        </div>
-
-        <div className="bill-prepare fade-stagger">
-          {PREPARE_STEPS.map((step) => (
-            <div className="glass-card bill-prepare-card" key={step.key} id={`prepare-${step.key}`}>
-              <span className="bill-prepare-card__num">{step.num}</span>
-              <div className="bill-prepare-card__icon">{step.icon}</div>
-              <h3>{t(`bill.prepare_${step.key}_title`)}</h3>
-              <p>{t(`bill.prepare_${step.key}_desc`)}</p>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: 'var(--space-8)' }}>
-          <Link to="/screener" className="btn btn--primary btn--lg" id="bill-take-screener">
-            📊 {t('hero.cta_screen')}
-          </Link>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="bill-page__section reveal" ref={addRevealRef}>
-        <div className="section-heading">
-          <h2>{t('bill.faq_title')}</h2>
-        </div>
-
-        <div className="bill-faq" id="bill-faq">
-          {faqs.map((num) => {
-            const isOpen = openFaq === num;
-            return (
-              <div className={`bill-faq__item ${isOpen ? 'bill-faq__item--open' : ''}`} key={num}>
-                <button
-                  className="bill-faq__question"
-                  onClick={() => setOpenFaq(isOpen ? null : num)}
-                  aria-expanded={isOpen}
-                  id={`faq-q${num}`}
-                >
-                  <span>{t(`bill.faq_q${num}`)}</span>
-                  <span className="bill-faq__toggle">{isOpen ? '−' : '+'}</span>
-                </button>
-                {isOpen && (
-                  <div className="bill-faq__answer" id={`faq-a${num}`}>
-                    <p>{t(`bill.faq_a${num}`)}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-    </div>
+      <section className="source-box"><h2>How we verify this page</h2><p>We use the official New York State Senate bill record as the source of truth. Advocacy announcements provide context but do not replace the official status.</p><div className="button-row"><a href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">Official S634B record ↗</a><a href={BILL_STATUS.updateUrl} target="_blank" rel="noreferrer">August 18 legislative update ↗</a></div></section>
+      <section className="bill-next"><h2>Take a useful step today</h2><p>Prepare questions for a healthcare professional and locate culturally relevant support.</p><div className="button-row"><Link className="btn btn--primary" to="/screener">Start health check</Link><Link className="btn btn--secondary" to="/resources">Find community help</Link></div></section>
+    </article>
   );
 }
 

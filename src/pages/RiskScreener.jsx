@@ -1,537 +1,83 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/i18nProvider';
-import { calculateBMI, calculateRisk } from '../utils/riskCalculator';
+import { calculateBMI, evaluateScreeningGuidance } from '../utils/riskCalculator';
+import { SITE } from '../config/site';
 
-const STEPS = ['age', 'body', 'health', 'lifestyle', 'ethnicity'];
-
-const INITIAL_DATA = {
-  age: '',
-  heightCm: '',
-  weightKg: '',
-  waist: '',
-  // Imperial fields
-  heightFt: '',
-  heightIn: '',
-  weightLbs: '',
-  waistIn: '',
-  familyHistory: null,
-  gestational: null,
-  activityLevel: '',
-  ethnicity: '',
+const COPY = {
+  en: { intro: 'This educational check helps you prepare for a conversation with a healthcare professional. It does not calculate your chance of developing diabetes.', privacy: 'Your answers stay on this device and are cleared when you leave or restart.', submit: 'Show my guidance', result: 'Your screening conversation guide', discuss: 'Consider talking with a healthcare professional about diabetes screening.', routine: 'Keep up with routine preventive care and ask when screening is right for you.', explain: 'These are discussion points, not a diagnosis or a medical risk score.', present: 'Worth discussing', absent: 'No flag from this answer', error: 'Please complete the required fields using realistic values.', ageHelp: 'For adults age 18 and older.', bodyHelp: 'BMI is a screening reference and does not measure health by itself.', next: 'What to do next', doctor: 'Save or show this page when you speak with a healthcare professional.', restart: 'Start over' },
+  ko: { intro: '이 교육용 확인은 의료진과 상담을 준비하도록 돕습니다. 당뇨병 발생 확률을 계산하지 않습니다.', privacy: '답변은 이 기기에만 머물며 페이지를 나가거나 다시 시작하면 지워집니다.', submit: '안내 보기', result: '검사 상담 안내', discuss: '의료진과 당뇨병 검사에 관해 상담해 보세요.', routine: '정기 예방 진료를 계속하고 언제 검사가 필요한지 의료진에게 물어보세요.', explain: '아래 내용은 상담을 위한 참고사항이며 진단이나 의료 위험 점수가 아닙니다.', present: '상담해 볼 항목', absent: '이 답변에서는 해당 없음', error: '필수 항목을 현실적인 값으로 모두 입력해 주세요.', ageHelp: '18세 이상 성인을 위한 안내입니다.', bodyHelp: 'BMI는 참고용 검사 기준이며 이것만으로 건강을 판단하지 않습니다.', next: '다음 단계', doctor: '의료진과 상담할 때 이 페이지를 저장하거나 보여 주세요.', restart: '다시 시작' },
+  zh: { intro: '此教育工具帮助您准备与医疗专业人员沟通，并不计算您患糖尿病的概率。', privacy: '您的回答只保留在此设备上，离开或重新开始后即清除。', submit: '查看指导', result: '您的筛查沟通指南', discuss: '建议与医疗专业人员讨论糖尿病筛查。', routine: '继续常规预防保健，并询问何时适合筛查。', explain: '以下内容仅供沟通参考，不是诊断或医疗风险评分。', present: '值得讨论', absent: '此答案未提示', error: '请使用合理数值完成所有必填项。', ageHelp: '适用于18岁及以上成年人。', bodyHelp: 'BMI仅是筛查参考，不能单独衡量健康。', next: '下一步', doctor: '与医疗专业人员交流时可保存或展示此页面。', restart: '重新开始' },
+  bn: { intro: 'এই শিক্ষামূলক যাচাইটি স্বাস্থ্যসেবা পেশাজীবীর সঙ্গে কথা বলার প্রস্তুতিতে সাহায্য করে। এটি ডায়াবেটিস হওয়ার সম্ভাবনা গণনা করে না।', privacy: 'আপনার উত্তর এই ডিভাইসেই থাকে এবং পৃষ্ঠা ছাড়লে বা আবার শুরু করলে মুছে যায়।', submit: 'আমার নির্দেশনা দেখান', result: 'স্ক্রিনিং আলোচনার নির্দেশিকা', discuss: 'ডায়াবেটিস স্ক্রিনিং নিয়ে স্বাস্থ্যসেবা পেশাজীবীর সঙ্গে কথা বলার কথা বিবেচনা করুন।', routine: 'নিয়মিত প্রতিরোধমূলক যত্ন চালিয়ে যান এবং স্ক্রিনিং কখন উপযুক্ত তা জিজ্ঞাসা করুন।', explain: 'এগুলো আলোচনার বিষয়, রোগ নির্ণয় বা ঝুঁকির স্কোর নয়।', present: 'আলোচনা করা উপকারী', absent: 'এই উত্তরে সংকেত নেই', error: 'বাস্তবসম্মত মান দিয়ে প্রয়োজনীয় ঘরগুলো পূরণ করুন।', ageHelp: '১৮ বছর বা তার বেশি বয়সী প্রাপ্তবয়স্কদের জন্য।', bodyHelp: 'BMI একটি স্ক্রিনিং নির্দেশক; এটি একা স্বাস্থ্য নির্ধারণ করে না।', next: 'পরবর্তী পদক্ষেপ', doctor: 'স্বাস্থ্যসেবা পেশাজীবীর সঙ্গে কথা বলার সময় এই পৃষ্ঠা দেখান।', restart: 'আবার শুরু' },
+  ur: { intro: 'یہ تعلیمی جانچ صحت کے ماہر سے گفتگو کی تیاری میں مدد دیتی ہے۔ یہ ذیابیطس ہونے کے امکان کا حساب نہیں لگاتی۔', privacy: 'آپ کے جوابات اسی آلے پر رہتے ہیں اور صفحہ چھوڑنے یا دوبارہ شروع کرنے پر مٹ جاتے ہیں۔', submit: 'میری رہنمائی دکھائیں', result: 'اسکریننگ گفتگو کی رہنمائی', discuss: 'ذیابیطس اسکریننگ کے بارے میں صحت کے ماہر سے بات کرنے پر غور کریں۔', routine: 'معمول کی احتیاطی نگہداشت جاری رکھیں اور پوچھیں کہ اسکریننگ کب مناسب ہے۔', explain: 'یہ گفتگو کے نکات ہیں، تشخیص یا طبی خطرے کا اسکور نہیں۔', present: 'بات کرنا مفید ہے', absent: 'اس جواب سے کوئی نشان نہیں', error: 'حقیقت پسندانہ قدروں کے ساتھ تمام ضروری خانے مکمل کریں۔', ageHelp: '18 سال یا اس سے زیادہ عمر کے بالغوں کے لیے۔', bodyHelp: 'BMI صرف اسکریننگ کا حوالہ ہے؛ یہ اکیلا صحت نہیں ناپتا۔', next: 'اگلا قدم', doctor: 'صحت کے ماہر سے بات کرتے وقت یہ صفحہ دکھائیں۔', restart: 'دوبارہ شروع کریں' },
 };
 
-// Conversion helpers
-function ftInToCm(ft, inches) {
-  const totalInches = (Number(ft) || 0) * 12 + (Number(inches) || 0);
-  return totalInches > 0 ? +(totalInches * 2.54).toFixed(1) : '';
-}
-function lbsToKg(lbs) {
-  return lbs ? +(Number(lbs) * 0.453592).toFixed(1) : '';
-}
-function inToCm(inches) {
-  return inches ? +(Number(inches) * 2.54).toFixed(1) : '';
-}
+const INITIAL = { age: '', heightFt: '', heightIn: '', weightLbs: '', heightCm: '', weightKg: '', familyHistory: '', gestational: '', activityLevel: '' };
 
 function RiskScreener() {
-  const { t } = useI18n();
-  const [step, setStep] = useState(0);
-  const [data, setData] = useState(INITIAL_DATA);
+  const { t, lang } = useI18n();
+  const copy = COPY[lang] || COPY.en;
+  const [data, setData] = useState(INITIAL);
+  const [unit, setUnit] = useState(() => localStorage.getItem('aapicheck-units') || 'imperial');
   const [result, setResult] = useState(null);
-  const [unitSystem, setUnitSystem] = useState('metric');
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    document.title = `${t('screener.title')} — AAPI Health Equity`;
-  }, [t]);
+  useEffect(() => { document.title = `${t('screener.title')} — ${SITE.name}`; }, [t]);
+  useEffect(() => { localStorage.setItem('aapicheck-units', unit); }, [unit]);
 
-  const update = (key, value) => setData((prev) => ({ ...prev, [key]: value }));
+  const measurements = useMemo(() => {
+    const heightCm = unit === 'metric' ? Number(data.heightCm) : ((Number(data.heightFt) * 12) + Number(data.heightIn)) * 2.54;
+    const weightKg = unit === 'metric' ? Number(data.weightKg) : Number(data.weightLbs) * 0.453592;
+    return { heightCm, weightKg, bmi: calculateBMI(heightCm, weightKg) };
+  }, [data, unit]);
 
-  // Compute effective metric values based on unit system
-  const effectiveHeightCm = unitSystem === 'imperial'
-    ? ftInToCm(data.heightFt, data.heightIn)
-    : Number(data.heightCm);
-  const effectiveWeightKg = unitSystem === 'imperial'
-    ? lbsToKg(data.weightLbs)
-    : Number(data.weightKg);
-  const effectiveWaist = unitSystem === 'imperial'
-    ? inToCm(data.waistIn)
-    : Number(data.waist);
-
-  const bmi = calculateBMI(effectiveHeightCm, effectiveWeightKg);
-
-  const canProceed = () => {
-    switch (step) {
-      case 0: return data.age !== '' && Number(data.age) > 0;
-      case 1:
-        if (unitSystem === 'imperial') {
-          return data.heightFt !== '' && data.weightLbs !== '';
-        }
-        return data.heightCm !== '' && data.weightKg !== '';
-      case 2: return data.familyHistory !== null;
-      case 3: return data.activityLevel !== '';
-      case 4: return data.ethnicity !== '';
-      default: return false;
-    }
+  const update = (key, value) => { setData((current) => ({ ...current, [key]: value })); setError(''); };
+  const valid = () => Number(data.age) >= 18 && Number(data.age) <= 120 && measurements.heightCm >= 100 && measurements.heightCm <= 250 && measurements.weightKg >= 25 && measurements.weightKg <= 350 && data.familyHistory !== '' && data.activityLevel;
+  const submit = (event) => {
+    event.preventDefault();
+    if (!valid()) { setError(copy.error); return; }
+    setResult(evaluateScreeningGuidance({ ...data, age: Number(data.age), bmi: measurements.bmi, familyHistory: data.familyHistory === 'yes', gestational: data.gestational === 'yes' }));
+    requestAnimationFrame(() => document.getElementById('screening-result')?.focus());
   };
 
-  const handleNext = () => {
-    if (step < STEPS.length - 1) {
-      setStep(step + 1);
-    } else {
-      // Calculate results
-      const res = calculateRisk({
-        age: Number(data.age),
-        bmi,
-        waist: effectiveWaist || null,
-        familyHistory: data.familyHistory === true,
-        gestational: data.gestational,
-        activityLevel: data.activityLevel,
-        ethnicity: data.ethnicity,
-      });
-      setResult(res);
-    }
-  };
+  const factorLabels = { bmi: t('screener.factor_bmi'), age: t('screener.factor_age'), family: t('screener.factor_family'), gestational: t('screener.factor_gestational'), activity: t('screener.factor_activity') };
 
-  const handleBack = () => {
-    if (step > 0) setStep(step - 1);
-  };
-
-  const handleRestart = () => {
-    setStep(0);
-    setData(INITIAL_DATA);
-    setResult(null);
-  };
-
-  const riskLevelKey = result
-    ? `screener.risk_${result.level.replace('-', '_')}`
-    : '';
+  if (result) return (
+    <section className="screener screener--result" aria-labelledby="screening-result">
+      <div className="screener__intro"><p className="eyebrow">Private educational tool</p><h1 id="screening-result" tabIndex="-1">{copy.result}</h1><p>{copy.explain}</p></div>
+      <div className={`guidance-result ${result.discussionRecommended ? 'guidance-result--discuss' : ''}`}>
+        <div className="guidance-result__headline"><span aria-hidden="true">{result.discussionRecommended ? '!' : '✓'}</span><h2>{result.discussionRecommended ? copy.discuss : copy.routine}</h2></div>
+        <dl className="factor-list">{result.factors.map((factor) => <div key={factor.key}><dt>{factorLabels[factor.key]}{factor.key === 'bmi' && factor.value ? `: ${factor.value}` : ''}</dt><dd className={factor.present ? 'is-present' : ''}>{factor.present ? copy.present : copy.absent}</dd></div>)}</dl>
+        <div className="next-step-box"><h2>{copy.next}</h2><p>{copy.doctor}</p><div className="button-row"><Link className="btn btn--primary" to="/resources">{t('screener.find_provider')}</Link><button className="btn btn--secondary" onClick={() => { setData(INITIAL); setResult(null); }}>{copy.restart}</button></div></div>
+      </div>
+    </section>
+  );
 
   return (
-    <div className="screener page-enter">
-      <div className="section-heading" style={{ marginBottom: 'var(--space-6)' }}>
-        <h1 style={{ fontSize: 'var(--fs-3xl)' }}>{t('screener.title')}</h1>
-        <p>{t('screener.subtitle')}</p>
-      </div>
-
-      {/* Progress bar */}
-      {!result && (
-        <div className="screener__progress" role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={STEPS.length}>
-          {STEPS.map((_, i) => (
-            <div
-              key={i}
-              className={`screener__progress-step ${
-                i < step ? 'screener__progress-step--done' : ''
-              } ${i === step ? 'screener__progress-step--active' : ''}`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Step content */}
-      {!result ? (
-        <div className="glass-card screener__card" key={step}>
-          {step === 0 && (
-            <>
-              <h2>{t('screener.step_age')}</h2>
-              <p>{t('screener.age_label')}</p>
-              <div className="screener__field">
-                <div className="input-group">
-                  <input
-                    type="number"
-                    className="input-field"
-                    placeholder={t('screener.age_placeholder')}
-                    value={data.age}
-                    onChange={(e) => update('age', e.target.value)}
-                    min="1"
-                    max="120"
-                    id="input-age"
-                    aria-label={t('screener.age_label')}
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {step === 1 && (
-            <>
-              <h2>{t('screener.step_body')}</h2>
-              <p>{t('screener.bmi_note')}</p>
-
-              {/* Unit Toggle */}
-              <div className="unit-toggle" style={{ marginBottom: 'var(--space-6)' }}>
-                <button
-                  type="button"
-                  className={`unit-toggle__option ${unitSystem === 'metric' ? 'unit-toggle__option--active' : ''}`}
-                  onClick={() => setUnitSystem('metric')}
-                  id="unit-metric"
-                >
-                  📏 {t('screener.unit_metric')}
-                </button>
-                <button
-                  type="button"
-                  className={`unit-toggle__option ${unitSystem === 'imperial' ? 'unit-toggle__option--active' : ''}`}
-                  onClick={() => setUnitSystem('imperial')}
-                  id="unit-imperial"
-                >
-                  📐 {t('screener.unit_imperial')}
-                </button>
-              </div>
-
-              {/* Height */}
-              {unitSystem === 'metric' ? (
-                <div className="screener__field">
-                  <div className="input-group">
-                    <label htmlFor="input-height">{t('screener.height_label')}</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder={t('screener.height_placeholder')}
-                      value={data.heightCm}
-                      onChange={(e) => update('heightCm', e.target.value)}
-                      id="input-height"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="screener__field" style={{ display: 'flex', gap: 'var(--space-4)' }}>
-                  <div className="input-group" style={{ flex: 1 }}>
-                    <label htmlFor="input-height-ft">{t('screener.height_ft_label')}</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder={t('screener.height_ft_placeholder')}
-                      value={data.heightFt}
-                      onChange={(e) => update('heightFt', e.target.value)}
-                      id="input-height-ft"
-                      min="0"
-                      max="8"
-                    />
-                  </div>
-                  <div className="input-group" style={{ flex: 1 }}>
-                    <label htmlFor="input-height-in">{t('screener.height_in_label')}</label>
-                    <input
-                      type="number"
-                      className="input-field"
-                      placeholder={t('screener.height_in_placeholder')}
-                      value={data.heightIn}
-                      onChange={(e) => update('heightIn', e.target.value)}
-                      id="input-height-in"
-                      min="0"
-                      max="11"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Weight */}
-              <div className="screener__field">
-                <div className="input-group">
-                  <label htmlFor={unitSystem === 'metric' ? 'input-weight' : 'input-weight-lbs'}>
-                    {unitSystem === 'metric' ? t('screener.weight_label') : t('screener.weight_lbs_label')}
-                  </label>
-                  <input
-                    type="number"
-                    className="input-field"
-                    placeholder={unitSystem === 'metric' ? t('screener.weight_placeholder') : t('screener.weight_lbs_placeholder')}
-                    value={unitSystem === 'metric' ? data.weightKg : data.weightLbs}
-                    onChange={(e) => update(unitSystem === 'metric' ? 'weightKg' : 'weightLbs', e.target.value)}
-                    id={unitSystem === 'metric' ? 'input-weight' : 'input-weight-lbs'}
-                  />
-                </div>
-              </div>
-
-              {/* BMI Display */}
-              {bmi && (
-                <div style={{ marginTop: 'var(--space-4)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', background: bmi >= 23 ? 'rgba(245, 158, 11, 0.1)' : 'rgba(34, 197, 94, 0.1)', border: `1px solid ${bmi >= 23 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(34, 197, 94, 0.3)'}` }}>
-                  <strong>{t('screener.your_bmi')}:</strong> {bmi}
-                  {bmi >= 23 && <span style={{ color: 'var(--color-amber-400)', marginLeft: 'var(--space-2)' }}>⚠ {t('screener.bmi_note')}</span>}
-                </div>
-              )}
-
-              {/* Waist */}
-              <div className="screener__field" style={{ marginTop: 'var(--space-4)' }}>
-                <div className="input-group">
-                  <label htmlFor={unitSystem === 'metric' ? 'input-waist' : 'input-waist-in'}>
-                    {unitSystem === 'metric' ? t('screener.waist_label') : t('screener.waist_in_label')}
-                  </label>
-                  <input
-                    type="number"
-                    className="input-field"
-                    placeholder={unitSystem === 'metric' ? t('screener.waist_placeholder') : t('screener.waist_in_placeholder')}
-                    value={unitSystem === 'metric' ? data.waist : data.waistIn}
-                    onChange={(e) => update(unitSystem === 'metric' ? 'waist' : 'waistIn', e.target.value)}
-                    id={unitSystem === 'metric' ? 'input-waist' : 'input-waist-in'}
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <h2>{t('screener.step_health')}</h2>
-              <div className="screener__field">
-                <div className="input-group">
-                  <label>{t('screener.family_history')}</label>
-                  <div className="toggle-group">
-                    <button
-                      type="button"
-                      className={`toggle-option ${data.familyHistory === true ? 'toggle-option--selected' : ''}`}
-                      onClick={() => update('familyHistory', true)}
-                      id="btn-family-yes"
-                    >
-                      {t('screener.yes')}
-                    </button>
-                    <button
-                      type="button"
-                      className={`toggle-option ${data.familyHistory === false ? 'toggle-option--selected' : ''}`}
-                      onClick={() => update('familyHistory', false)}
-                      id="btn-family-no"
-                    >
-                      {t('screener.no')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="screener__field">
-                <div className="input-group">
-                  <label>{t('screener.gestational')}</label>
-                  <div className="toggle-group">
-                    <button
-                      type="button"
-                      className={`toggle-option ${data.gestational === true ? 'toggle-option--selected' : ''}`}
-                      onClick={() => update('gestational', true)}
-                      id="btn-gestational-yes"
-                    >
-                      {t('screener.yes')}
-                    </button>
-                    <button
-                      type="button"
-                      className={`toggle-option ${data.gestational === false ? 'toggle-option--selected' : ''}`}
-                      onClick={() => update('gestational', false)}
-                      id="btn-gestational-no"
-                    >
-                      {t('screener.no')}
-                    </button>
-                    <button
-                      type="button"
-                      className={`toggle-option ${data.gestational === null ? 'toggle-option--selected' : ''}`}
-                      onClick={() => update('gestational', null)}
-                      id="btn-gestational-na"
-                    >
-                      {t('screener.not_applicable')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {step === 3 && (
-            <>
-              <h2>{t('screener.step_lifestyle')}</h2>
-              <div className="screener__field">
-                <div className="input-group">
-                  <label>{t('screener.activity_label')}</label>
-                  <div className="toggle-group" style={{ flexWrap: 'wrap' }}>
-                    {['daily', 'weekly', 'occasional', 'rarely'].map((level) => (
-                      <button
-                        key={level}
-                        type="button"
-                        className={`toggle-option ${data.activityLevel === level ? 'toggle-option--selected' : ''}`}
-                        onClick={() => update('activityLevel', level)}
-                        id={`btn-activity-${level}`}
-                      >
-                        {t(`screener.activity_${level}`)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {step === 4 && (
-            <>
-              <h2>{t('screener.step_ethnicity')}</h2>
-              <div className="screener__field">
-                <div className="input-group">
-                  <label>{t('screener.ethnicity_label')}</label>
-                  <div className="toggle-group" style={{ flexWrap: 'wrap' }}>
-                    {['south_asian', 'east_asian', 'southeast_asian', 'pacific_islander', 'other_aapi'].map((eth) => (
-                      <button
-                        key={eth}
-                        type="button"
-                        className={`toggle-option ${data.ethnicity === eth ? 'toggle-option--selected' : ''}`}
-                        onClick={() => update('ethnicity', eth)}
-                        id={`btn-eth-${eth}`}
-                      >
-                        {t(`screener.ethnicity_${eth}`)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Navigation */}
-          <div className="screener__actions">
-            <button
-              className="btn btn--secondary"
-              onClick={handleBack}
-              disabled={step === 0}
-              style={{ opacity: step === 0 ? 0.3 : 1 }}
-              id="btn-back"
-            >
-              ← {t('screener.back')}
-            </button>
-            <button
-              className="btn btn--primary"
-              onClick={handleNext}
-              disabled={!canProceed()}
-              style={{ opacity: canProceed() ? 1 : 0.4 }}
-              id="btn-next"
-            >
-              {step === STEPS.length - 1 ? t('screener.see_results') : `${t('screener.next')} →`}
-            </button>
-          </div>
-        </div>
-      ) : (
-        /* === RESULTS === */
-        <div className="glass-card screener__card results" key="results">
-          <h2>{t('screener.result_title')}</h2>
-
-          <div className={`results__score results__score--${result.level}`}>
-            <span className="results__score-value">{result.score}</span>
-            <span className="results__score-label">{t(riskLevelKey)}</span>
-          </div>
-
-          {/* === RISK SCALE & EXPLANATION === */}
-          <div className="score-explanation-box">
-            <h3>{t('screener.score_scale_title')}</h3>
-            <p className="score-explanation-intro">
-              Your overall risk score is <strong>{result.score} out of 100</strong>. Scores evaluate your likelihood of developing pre-diabetes or type 2 diabetes based on ADA guidelines adjusted for AAPI populations.
-            </p>
-
-            {/* Scale Bar */}
-            <div className="risk-scale-container" aria-label="Risk score scale from 0 to 100">
-              <div className="risk-scale-track">
-                <div className="scale-segment scale-segment--low" title="0-29 Low Risk" style={{ flex: '30' }}>
-                  <span>0-29</span>
-                </div>
-                <div className="scale-segment scale-segment--moderate" title="30-49 Moderate Risk" style={{ flex: '20' }}>
-                  <span>30-49</span>
-                </div>
-                <div className="scale-segment scale-segment--high" title="50-69 High Risk" style={{ flex: '20' }}>
-                  <span>50-69</span>
-                </div>
-                <div className="scale-segment scale-segment--very-high" title="70-100 Very High Risk" style={{ flex: '30' }}>
-                  <span>70-100</span>
-                </div>
-              </div>
-              <div
-                className="risk-scale-pin"
-                style={{ left: `${Math.min(Math.max(result.score, 2), 98)}%` }}
-                title={`Your score: ${result.score}`}
-              >
-                <div className="pin-head">{result.score}</div>
-                <div className="pin-pointer" />
-              </div>
-            </div>
-
-            {/* Scale Ranges Grid */}
-            <div className="scale-legend-grid">
-              <div className={`legend-item ${result.level === 'low' ? 'legend-item--active' : ''}`}>
-                <span className="legend-dot legend-dot--low" />
-                <span>{t('screener.range_low_desc')}</span>
-              </div>
-              <div className={`legend-item ${result.level === 'moderate' ? 'legend-item--active' : ''}`}>
-                <span className="legend-dot legend-dot--moderate" />
-                <span>{t('screener.range_moderate_desc')}</span>
-              </div>
-              <div className={`legend-item ${result.level === 'high' ? 'legend-item--active' : ''}`}>
-                <span className="legend-dot legend-dot--high" />
-                <span>{t('screener.range_high_desc')}</span>
-              </div>
-              <div className={`legend-item ${result.level === 'very-high' ? 'legend-item--active' : ''}`}>
-                <span className="legend-dot legend-dot--very-high" />
-                <span>{t('screener.range_very_high_desc')}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* === ITEMIZED SCORE BREAKDOWN === */}
-          <div className="score-breakdown-box">
-            <h3>{t('screener.score_breakdown_title')}</h3>
-            <div className="breakdown-table">
-              {result.breakdown && result.breakdown.map((item, idx) => (
-                <div className="breakdown-row" key={idx}>
-                  <div className="breakdown-row__label">
-                    <span>{t(item.factorKey)}</span>
-                    {item.isAapiSpecific && (
-                      <span className="aapi-tag">AAPI Cutoff</span>
-                    )}
-                  </div>
-                  <div className="breakdown-row__value">
-                    {item.valueKey ? t(item.valueKey) : item.value}
-                  </div>
-                  <div className="breakdown-row__pts">
-                    +{item.points} {t('screener.pts')}
-                  </div>
-                </div>
-              ))}
-
-              {result.multiplier && result.multiplier > 1.0 && (
-                <div className="breakdown-row breakdown-row--multiplier">
-                  <div className="breakdown-row__label">
-                    <span>{t('screener.factor_ethnicity_multiplier')}</span>
-                    {result.ethnicityKey && <span className="sub-ethnicity-tag">{t(result.ethnicityKey)}</span>}
-                  </div>
-                  <div className="breakdown-row__value">
-                    x{result.multiplier}
-                  </div>
-                  <div className="breakdown-row__pts">
-                    Sub-group Weight
-                  </div>
-                </div>
-              )}
-
-              <div className="breakdown-row breakdown-row--total">
-                <div className="breakdown-row__label">
-                  <strong>Total Calculated Risk Score</strong>
-                </div>
-                <div className="breakdown-row__pts" style={{ fontSize: 'var(--fs-lg)', fontWeight: 'bold' }}>
-                  {result.score} / 100
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="results__recommendations">
-            <h3>{t('screener.next_steps')}</h3>
-            <ul>
-              {result.recommendations.map((rec, i) => (
-                <li key={i}>{rec}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div style={{ display: 'flex', gap: 'var(--space-4)', justifyContent: 'center', marginTop: 'var(--space-8)', flexWrap: 'wrap' }}>
-            <Link to="/resources" className="btn btn--primary" id="btn-find-provider">
-              📁 {t('screener.find_provider')}
-            </Link>
-            <Link to="/tracker" className="btn btn--secondary" id="btn-view-tracker">
-              ✅ {t('nav.tracker')}
-            </Link>
-            <button className="btn btn--secondary" onClick={handleRestart} id="btn-restart">
-              🔄 {t('screener.start_over')}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    <section className="screener" aria-labelledby="screener-title">
+      <div className="screener__intro"><p className="eyebrow">About 2 minutes</p><h1 id="screener-title">{t('screener.title')}</h1><p>{copy.intro}</p><p className="privacy-note"><span aria-hidden="true">●</span> {copy.privacy}</p></div>
+      <form className="health-check-form" onSubmit={submit} noValidate>
+        <fieldset><legend>1. {t('screener.step_age')}</legend><p>{copy.ageHelp}</p><label>{t('screener.age_label')}<input type="number" inputMode="numeric" min="18" max="120" value={data.age} onChange={(e) => update('age', e.target.value)} /></label></fieldset>
+        <fieldset><legend>2. {t('screener.step_body')}</legend><p>{copy.bodyHelp}</p>
+          <div className="unit-toggle" role="group" aria-label="Measurement units"><button type="button" aria-pressed={unit === 'imperial'} onClick={() => setUnit('imperial')}>{t('screener.unit_imperial')}</button><button type="button" aria-pressed={unit === 'metric'} onClick={() => setUnit('metric')}>{t('screener.unit_metric')}</button></div>
+          {unit === 'imperial' ? <div className="form-grid form-grid--three"><label>{t('screener.height_ft_label')}<input type="number" min="3" max="8" value={data.heightFt} onChange={(e) => update('heightFt', e.target.value)} /></label><label>{t('screener.height_in_label')}<input type="number" min="0" max="11" value={data.heightIn} onChange={(e) => update('heightIn', e.target.value)} /></label><label>{t('screener.weight_lbs_label')}<input type="number" min="55" max="770" value={data.weightLbs} onChange={(e) => update('weightLbs', e.target.value)} /></label></div> : <div className="form-grid"><label>{t('screener.height_label')}<input type="number" min="100" max="250" value={data.heightCm} onChange={(e) => update('heightCm', e.target.value)} /></label><label>{t('screener.weight_label')}<input type="number" min="25" max="350" value={data.weightKg} onChange={(e) => update('weightKg', e.target.value)} /></label></div>}
+          {measurements.bmi && <p className="bmi-preview"><strong>{t('screener.your_bmi')}: {measurements.bmi}</strong> · {t('screener.bmi_note')}</p>}
+        </fieldset>
+        <fieldset><legend>3. {t('screener.step_health')}</legend>
+          <Question label={t('screener.family_history')} value={data.familyHistory} onChange={(value) => update('familyHistory', value)} t={t} required />
+          <Question label={t('screener.gestational')} value={data.gestational} onChange={(value) => update('gestational', value)} t={t} allowNA />
+          <label>{t('screener.activity_label')}<select value={data.activityLevel} onChange={(e) => update('activityLevel', e.target.value)}><option value="">—</option>{['daily','weekly','occasional','rarely'].map((key) => <option value={key} key={key}>{t(`screener.activity_${key}`)}</option>)}</select></label>
+        </fieldset>
+        {error && <p className="form-error" role="alert">{error}</p>}
+        <button className="btn btn--primary btn--lg" type="submit">{copy.submit}</button>
+        <p className="medical-disclaimer">This tool does not diagnose diabetes, replace laboratory testing, or provide medical advice. Seek urgent care for urgent symptoms.</p>
+      </form>
+    </section>
   );
+}
+
+function Question({ label, value, onChange, t, allowNA = false }) {
+  return <div className="form-question"><span>{label}</span><div className="choice-row">{[['yes',t('screener.yes')],['no',t('screener.no')],...(allowNA ? [['na',t('screener.not_applicable')]] : [])].map(([key,text]) => <button type="button" key={key} aria-pressed={value === key} onClick={() => onChange(key)}>{text}</button>)}</div></div>;
 }
 
 export default RiskScreener;
