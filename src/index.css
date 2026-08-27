@@ -1021,7 +1021,12 @@ ul, ol {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
+  color: #f8fafc;
 }
+.map-page__sidebar h3,
+.map-page__sidebar [style*="--color-text-primary"] { color: #f8fafc !important; }
+.map-page__sidebar [style*="--color-text-secondary"] { color: #dbeafe !important; }
+.map-page__sidebar [style*="--color-text-muted"] { color: #cbd5e1 !important; }
 
 @media (max-width: 768px) {
   .map-page__sidebar {
