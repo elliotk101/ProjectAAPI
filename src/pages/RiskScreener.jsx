@@ -12,7 +12,7 @@ const COPY = {
     history: 'Health history', historyHelp: 'Choose “Not sure” when you do not know. These answers help prepare useful questions.', hypertension: 'High blood pressure or blood-pressure medicine?', cardiovascular: 'Heart disease or stroke history?', pcos: 'Polycystic ovary syndrome (PCOS)?', prediabetes: 'Previously told you had prediabetes or elevated blood sugar?', unsure: 'Not sure',
     lifestyle: 'Daily-life context', lifestyleHelp: 'These answers do not raise or lower a medical score. They only personalize conversation ideas.', sugary: 'How often do you drink sugary drinks?', daily: 'Most days', sometimes: 'Sometimes', rarely: 'Rarely or never', afterMeal: 'Do you usually move or walk after meals?', sleep: 'Do you often sleep fewer than 6 hours?',
     result: 'Your screening conversation guide', ageOnly: 'Your age suggests checking routine screening timing—not that you are automatically high risk.', discuss: 'You have one or more items worth discussing at a routine healthcare visit.', routine: 'No additional screening flag appeared from these answers. Keep up with routine preventive care.', due: 'Your screening history may be due for review.', bodyContext: 'Body-size context', historyContext: 'Health-history context', lifeContext: 'Lifestyle conversation ideas', noFlag: 'No additional item selected', notDiagnosis: 'This is a conversation guide, not a diagnosis or probability score.',
-    card: 'Bilingual visit card', cardHelp: 'Show, save, or share this card for a healthcare visit. The English line can help staff understand the request.', qTiming: 'When should I have an A1C, fasting glucose, or another diabetes screening test?', qAsian: 'Does the Asian-ancestry BMI 23 screening threshold apply to me?', qHistory: 'How does my health history affect when I should be screened?', qLanguage: 'Please provide a qualified interpreter in my preferred language.', print: 'Print', download: 'Download to device', email: 'Email', share: 'Share', copy: 'Copy text', copied: 'Copied', screenedOn: 'Check date', privacyShare: 'This card stays on this device until you choose to download, copy, email, or share it. Your chosen app or email provider may keep a copy.', resources: 'Find language-friendly care', restart: 'Start over',
+    card: 'Bilingual visit card', cardHelp: 'Show, save, or share this card for a healthcare visit. The English line can help staff understand the request.', timing: 'Screening timing', recentTest: 'You reported a blood sugar or A1C test within the past year.', qTiming: 'When should I have an A1C, fasting glucose, or another diabetes screening test?', qNext: 'If my recent result was normal, when should I be screened again?', qAsian: 'Does the Asian-ancestry BMI 23 screening threshold apply to me?', qHistory: 'How does my health history affect when I should be screened?', qLanguage: 'Please provide a qualified interpreter in my preferred language.', waistRatio: 'Waist-to-height ratio', lifeCount: '{count} lifestyle topics are available for an optional conversation.', print: 'Print', download: 'Download to device', email: 'Email', share: 'Share', copy: 'Copy text', copied: 'Copied', screenedOn: 'Check date', privacyShare: 'This card stays on this device until you choose to download, copy, email, or share it. Your chosen app or email provider may keep a copy.', resources: 'Find language-friendly care', restart: 'Start over',
   },
   ko: {
     intro: '검사 시기를 이해하고 진료 질문을 준비하는 비공개 단계형 확인입니다. 당뇨병을 진단하거나 위험 점수를 계산하지 않습니다.', self: '내 건강을 직접 확인합니다', family: '가족의 확인을 도와드립니다', familyNote: '가족 모드는 큰 버튼과 쉬운 문장을 사용합니다. 확인받는 분을 기준으로 답해주세요.', private: '답변은 이 기기에만 있으며 다시 시작하거나 페이지를 나가면 사라집니다.', next: '계속', back: '이전', show: '내 안내 보기', step: '단계', of: '/', required: '계속하기 전에 필수 질문에 답해주세요.',
@@ -21,7 +21,7 @@ const COPY = {
     history: '건강 이력', historyHelp: '모르는 경우 “잘 모름”을 선택하세요. 진료 시 필요한 질문을 준비하는 데 사용됩니다.', hypertension: '고혈압이 있거나 혈압약을 복용하나요?', cardiovascular: '심장질환 또는 뇌졸중 이력이 있나요?', pcos: '다낭성난소증후군(PCOS)이 있나요?', prediabetes: '전당뇨 또는 혈당 상승을 들은 적이 있나요?', unsure: '잘 모름',
     lifestyle: '일상생활 확인', lifestyleHelp: '생활 답변은 의료 위험 점수에 반영하지 않습니다. 상담 내용을 개인화하는 데만 사용합니다.', sugary: '당이 든 음료를 얼마나 자주 드시나요?', daily: '거의 매일', sometimes: '가끔', rarely: '거의 또는 전혀 안 함', afterMeal: '식사 후 걷거나 몸을 움직이는 편인가요?', sleep: '6시간보다 적게 자는 날이 자주 있나요?',
     result: '나의 검사 상담 안내', ageOnly: '연령상 정기검사 시기를 확인할 때입니다. 나이만으로 고위험이라는 의미는 아닙니다.', discuss: '정기 진료 때 의료진과 이야기해 볼 항목이 있습니다.', routine: '입력한 답변에서는 추가 검사 신호가 나타나지 않았습니다. 정기 예방 진료를 이어가세요.', due: '최근 검사 시기를 다시 확인해 볼 수 있습니다.', bodyContext: '체형 관련 참고사항', historyContext: '건강 이력 참고사항', lifeContext: '생활 상담 아이디어', noFlag: '추가로 선택된 항목 없음', notDiagnosis: '이 결과는 대화 준비용이며 진단이나 발생 확률 점수가 아닙니다.',
-    card: '이중언어 진료 카드', cardHelp: '진료를 위해 이 카드를 보여주거나 기기에 저장·공유할 수 있습니다. 영어 문장은 의료진의 이해를 도울 수 있습니다.', qTiming: 'A1C, 공복혈당 또는 다른 당뇨병 검사를 언제 받는 것이 좋을까요?', qAsian: '아시아계 BMI 23 검사 기준이 저에게 적용되나요?', qHistory: '제 건강 이력이 검사 시기에 어떤 영향을 주나요?', qLanguage: '제가 선호하는 언어의 전문 통역사를 제공해 주세요.', print: '인쇄', download: '기기에 다운로드', email: '이메일', share: '휴대전화 공유', copy: '내용 복사', copied: '복사됨', screenedOn: '확인 날짜', privacyShare: '다운로드·복사·이메일·공유를 직접 선택하기 전에는 이 카드가 기기 밖으로 전송되지 않습니다. 선택한 앱이나 이메일 서비스에는 사본이 남을 수 있습니다.', resources: '언어 지원 의료기관 찾기', restart: '다시 시작',
+    card: '이중언어 진료 카드', cardHelp: '진료를 위해 이 카드를 보여주거나 기기에 저장·공유할 수 있습니다. 영어 문장은 의료진의 이해를 도울 수 있습니다.', timing: '검사 시기', recentTest: '최근 1년 안에 혈당검사 또는 A1C 검사를 받은 것으로 입력했습니다.', qTiming: 'A1C, 공복혈당 또는 다른 당뇨병 검사를 언제 받는 것이 좋을까요?', qNext: '최근 검사 결과가 정상이었다면 다음 검사는 언제 받으면 될까요?', qAsian: '아시아계 BMI 23 검사 기준이 저에게 적용되나요?', qHistory: '제 건강 이력이 검사 시기에 어떤 영향을 주나요?', qLanguage: '제가 선호하는 언어의 전문 통역사를 제공해 주세요.', waistRatio: '허리-키 비율', lifeCount: '원할 경우 상담에 활용할 생활 항목이 {count}개 있습니다.', print: '인쇄', download: '기기에 다운로드', email: '이메일', share: '휴대전화 공유', copy: '내용 복사', copied: '복사됨', screenedOn: '확인 날짜', privacyShare: '다운로드·복사·이메일·공유를 직접 선택하기 전에는 이 카드가 기기 밖으로 전송되지 않습니다. 선택한 앱이나 이메일 서비스에는 사본이 남을 수 있습니다.', resources: '언어 지원 의료기관 찾기', restart: '다시 시작',
   },
   zh: {
     intro: '通过私密的分步检查了解筛查时间并准备就诊问题；不诊断糖尿病，也不计算风险分数。', self: '为自己检查', family: '帮助家人检查', familyNote: '家庭模式使用更大的按钮和简明提示。请按被检查者的情况回答。', private: '答案仅保留在本设备，重新开始或离开后即清除。', next: '继续', back: '返回', show: '查看我的指南', step: '步骤', of: '/', basics: '从基本信息开始', basicsHelp: '年龄仅用于提示常规筛查时间，不会单独产生高风险警告。', lastTest: '上次血糖或A1C检测是什么时候？', never: '从未检测', within1: '一年内', within3: '1至3年前', over3: '超过3年', unknown: '不记得', body: 'AAPI体型参考', bodyHelp: 'BMI 23是亚裔人群筛查参考。可选腰围可提供更多信息，两者都不是诊断。', waist: '腰围（可选）', waistHelp: '测量腰部一周；不舒服或不确定可跳过。', inches: '英寸', centimeters: '厘米', history: '健康史', historyHelp: '不知道时请选择“不确定”。', hypertension: '高血压或正在服用降压药？', cardiovascular: '有心脏病或中风史？', pcos: '多囊卵巢综合征（PCOS）？', prediabetes: '曾被告知前期糖尿病或血糖偏高？', unsure: '不确定', lifestyle: '日常生活', lifestyleHelp: '这些答案不计入医疗风险分数，只用于准备沟通。', sugary: '多久喝一次含糖饮料？', daily: '大多数日子', sometimes: '有时', rarely: '很少或从不', afterMeal: '饭后通常会走动吗？', sleep: '是否经常睡眠少于6小时？', result: '筛查沟通指南', ageOnly: '您的年龄提示应确认常规筛查时间，并不表示自动属于高风险。', discuss: '有一项或多项内容值得在常规就诊时讨论。', routine: '这些答案未显示额外提示，请继续常规预防保健。', due: '可以重新确认您的筛查记录。', bodyContext: '体型参考', historyContext: '健康史参考', lifeContext: '生活沟通建议', noFlag: '未选择其他项目', notDiagnosis: '这是沟通指南，不是诊断或概率分数。', card: '双语就诊卡', cardHelp: '可在诊所展示或打印此卡。', qTiming: '我应该何时做A1C、空腹血糖或其他糖尿病筛查？', qAsian: '亚裔BMI 23筛查标准适用于我吗？', qHistory: '我的健康史会如何影响筛查时间？', qLanguage: '请提供我首选语言的合格口译员。', print: '打印就诊卡', resources: '查找语言友好医疗服务', restart: '重新开始',
@@ -34,6 +34,10 @@ COPY.bn = { ...COPY.en,
 COPY.ur = { ...COPY.en,
   intro: 'یہ نجی مرحلہ وار جانچ اسکریننگ کا وقت سمجھنے اور سوالات تیار کرنے میں مدد دیتی ہے؛ یہ تشخیص یا خطرے کا اسکور نہیں۔', self: 'اپنے لیے جانچ رہا/رہی ہوں', family: 'خاندان کے فرد کی مدد کر رہا/رہی ہوں', familyNote: 'خاندانی موڈ میں بڑے بٹن اور آسان زبان ہے۔ جس شخص کی جانچ ہے اسی کے مطابق جواب دیں۔', private: 'جوابات اسی آلے پر رہتے ہیں اور صفحہ چھوڑنے پر مٹ جاتے ہیں۔', next: 'جاری رکھیں', back: 'واپس', show: 'میری رہنمائی دکھائیں', step: 'مرحلہ', of: 'از', basics: 'بنیادی معلومات', basicsHelp: 'عمر صرف معمول کی اسکریننگ کا وقت بتانے کے لیے ہے؛ صرف عمر پر زیادہ خطرے کی تنبیہ نہیں ہوگی۔', lastTest: 'آخری بلڈ شوگر یا A1C ٹیسٹ کب ہوا؟', never: 'کبھی نہیں', within1: 'ایک سال کے اندر', within3: '۱–۳ سال پہلے', over3: '۳ سال سے زیادہ', unknown: 'یاد نہیں', body: 'AAPI جسمانی پیمائش', bodyHelp: 'BMI 23 ایشیائی نسب کے لوگوں کے لیے اسکریننگ حوالہ ہے؛ یہ تشخیص نہیں۔', waist: 'کمر کا گھیر (اختیاری)', waistHelp: 'اگر ناپنا مشکل یا غیر آرام دہ ہو تو چھوڑ دیں۔', inches: 'انچ', centimeters: 'سینٹی میٹر', history: 'صحت کی تاریخ', historyHelp: 'معلوم نہ ہو تو “یقین نہیں” منتخب کریں۔', hypertension: 'ہائی بلڈ پریشر یا اس کی دوا؟', cardiovascular: 'دل کی بیماری یا فالج کی تاریخ؟', pcos: 'پولی سسٹک اووری سنڈروم (PCOS)؟', prediabetes: 'کیا کبھی پری ذیابیطس یا بلند شوگر بتائی گئی؟', unsure: 'یقین نہیں', lifestyle: 'روزمرہ زندگی', lifestyleHelp: 'یہ جواب طبی خطرے کے اسکور میں شامل نہیں ہوتے؛ صرف گفتگو کی تیاری کے لیے ہیں۔', sugary: 'میٹھے مشروبات کتنی بار پیتے ہیں؟', daily: 'زیادہ تر دن', sometimes: 'کبھی کبھار', rarely: 'شاذ یا کبھی نہیں', afterMeal: 'کیا کھانے کے بعد عموماً چلتے یا حرکت کرتے ہیں؟', sleep: 'کیا اکثر ۶ گھنٹے سے کم سوتے ہیں؟', result: 'اسکریننگ گفتگو کی رہنمائی', ageOnly: 'آپ کی عمر معمول کی اسکریننگ کا وقت معلوم کرنے کی طرف اشارہ کرتی ہے—یہ خودبخود زیادہ خطرہ نہیں۔', discuss: 'معمول کے طبی دورے میں ایک یا زیادہ باتیں زیرِ بحث لائی جا سکتی ہیں۔', routine: 'ان جوابات سے کوئی اضافی اشارہ نہیں ملا۔ معمول کی احتیاطی نگہداشت جاری رکھیں۔', due: 'اسکریننگ کا وقت', bodyContext: 'جسمانی پیمائش', historyContext: 'صحت کی تاریخ', lifeContext: 'طرزِ زندگی کی گفتگو', noFlag: 'کوئی اضافی بات نہیں', notDiagnosis: 'یہ گفتگو کی رہنمائی ہے، تشخیص یا امکان کا اسکور نہیں۔', card: 'دو لسانی وزٹ کارڈ', cardHelp: 'کلینک میں یہ کارڈ دکھائیں یا پرنٹ کریں۔', qTiming: 'مجھے A1C، فاسٹنگ گلوکوز یا دوسری ذیابیطس اسکریننگ کب کرانی چاہیے؟', qAsian: 'کیا ایشیائی نسب کے لیے BMI 23 اسکریننگ معیار مجھ پر لاگو ہوتا ہے؟', qHistory: 'میری صحت کی تاریخ اسکریننگ کے وقت کو کیسے متاثر کرتی ہے؟', qLanguage: 'براہ کرم میری پسندیدہ زبان میں مستند ترجمان فراہم کریں۔', print: 'وزٹ کارڈ پرنٹ کریں', resources: 'زبان دوست نگہداشت تلاش کریں', restart: 'دوبارہ شروع کریں',
 };
+
+Object.assign(COPY.zh, { timing: '筛查时间', recentTest: '您填写的是过去一年内做过血糖或A1C检测。', qNext: '如果最近的结果正常，下次应何时筛查？', waistRatio: '腰高比', lifeCount: '如有需要，可讨论{count}项生活习惯。', download: '下载到设备', email: '电子邮件', share: '手机分享', copy: '复制文字', copied: '已复制', screenedOn: '检查日期', privacyShare: '在您主动下载、复制、发送邮件或分享之前，此卡不会离开设备。所选应用或邮件服务可能保留副本。' });
+Object.assign(COPY.bn, { timing: 'স্ক্রিনিংয়ের সময়', recentTest: 'আপনি গত এক বছরের মধ্যে রক্তে শর্করা বা A1C পরীক্ষা করেছেন বলে জানিয়েছেন।', qNext: 'সাম্প্রতিক ফল স্বাভাবিক হলে আবার কখন পরীক্ষা করাব?', waistRatio: 'কোমর-উচ্চতা অনুপাত', lifeCount: 'ইচ্ছা করলে {count}টি জীবনযাত্রার বিষয় আলোচনা করতে পারেন।', download: 'ডিভাইসে ডাউনলোড', email: 'ইমেইল', share: 'ফোনে শেয়ার', copy: 'লেখা কপি', copied: 'কপি হয়েছে', screenedOn: 'যাচাইয়ের তারিখ', privacyShare: 'আপনি ডাউনলোড, কপি, ইমেইল বা শেয়ার না করা পর্যন্ত কার্ডটি ডিভাইসেই থাকে। নির্বাচিত অ্যাপ বা ইমেইল সেবায় একটি কপি থাকতে পারে।' });
+Object.assign(COPY.ur, { timing: 'اسکریننگ کا وقت', recentTest: 'آپ نے بتایا کہ گزشتہ ایک سال میں بلڈ شوگر یا A1C ٹیسٹ ہوا ہے۔', qNext: 'اگر حالیہ نتیجہ نارمل تھا تو دوبارہ اسکریننگ کب کرانی چاہیے؟', waistRatio: 'کمر اور قد کا تناسب', lifeCount: 'اگر چاہیں تو طرزِ زندگی کے {count} موضوعات پر بات کر سکتے ہیں۔', download: 'آلے پر ڈاؤن لوڈ', email: 'ای میل', share: 'فون پر شیئر', copy: 'متن کاپی کریں', copied: 'کاپی ہوگیا', screenedOn: 'جانچ کی تاریخ', privacyShare: 'جب تک آپ خود ڈاؤن لوڈ، کاپی، ای میل یا شیئر نہ کریں یہ کارڈ اسی آلے پر رہتا ہے۔ منتخب ایپ یا ای میل سروس ایک نقل رکھ سکتی ہے۔' });
 
 const INITIAL = { mode: 'self', age: '', lastTest: '', heightFt: '', heightIn: '', weightLbs: '', heightCm: '', weightKg: '', waistIn: '', waistCm: '', familyHistory: '', gestational: '', hypertension: '', cardiovascular: '', pcos: '', priorPrediabetes: '', activityLevel: '', sugaryDrinks: '', afterMeal: '', sleep: '' };
 
@@ -96,12 +100,80 @@ function RiskScreener() {
 }
 
 function Result({ result, data, copy, english, lang, t, onRestart }) {
+  const [copied, setCopied] = useState(false);
+  const ui = { ...english, ...copy };
   const historyKeys = ['family','gestational','hypertension','cardiovascular','pcos','prediabetes'];
   const historyPresent = result.factors.some((factor) => historyKeys.includes(factor.key) && factor.present);
   const bodyPresent = result.factors.some((factor) => ['bmi','centralAdiposity'].includes(factor.key) && factor.present);
-  const questions = [result.routineScreeningDue && ['qTiming'], bodyPresent && ['qAsian'], historyPresent && ['qHistory'], ['qLanguage']].filter(Boolean).flat();
-  const headline = result.ageOnly ? copy.ageOnly : result.discussionRecommended ? copy.discuss : copy.routine;
-  return <section className="screener screener--result" aria-labelledby="screening-result"><div className="screener__intro"><p className="eyebrow">{t('screener.title')}</p><h1 id="screening-result" tabIndex="-1">{copy.result}</h1><p>{copy.notDiagnosis}</p></div><div className={`guidance-result ${result.discussionRecommended ? 'guidance-result--discuss' : ''}`}><div className="guidance-result__headline"><span aria-hidden="true">{result.ageOnly ? '○' : result.discussionRecommended ? '!' : '✓'}</span><h2>{headline}</h2></div><div className="result-summary-grid"><article><h3>{copy.due}</h3><p>{result.routineScreeningDue ? copy.qTiming : copy.routine}</p></article><article><h3>{copy.bodyContext}</h3><p>{bodyPresent ? copy.qAsian : copy.noFlag}{result.waistToHeight ? ` · ${result.waistToHeight}` : ''}</p></article><article><h3>{copy.historyContext}</h3><p>{historyPresent ? copy.qHistory : copy.noFlag}</p></article><article><h3>{copy.lifeContext}</h3><p>{result.lifestyleFactors.length ? `${result.lifestyleFactors.length} ${copy.discuss}` : copy.noFlag}</p></article></div><section className="visit-card"><div><p className="eyebrow">{copy.card}</p><h2>{copy.card}</h2><p>{copy.cardHelp}</p></div><ol>{questions.map((key) => <li key={key}><strong>{copy[key]}</strong>{lang !== 'en' && <span lang="en">{english[key]}</span>}</li>)}</ol><p className="visit-card__meta">AAPICHECK · Age {data.age} · {new Date().toLocaleDateString()}</p></section><div className="next-step-box"><div className="button-row"><button className="btn btn--primary" type="button" onClick={() => window.print()}>{copy.print}</button><Link className="btn btn--secondary" to="/resources">{copy.resources}</Link><button className="btn btn--secondary" type="button" onClick={onRestart}>{copy.restart}</button></div></div></div></section>;
+  const questions = [
+    result.routineScreeningDue && [data.lastTest === 'within1' ? 'qNext' : 'qTiming'],
+    bodyPresent && ['qAsian'],
+    historyPresent && ['qHistory'],
+    lang !== 'en' && ['qLanguage'],
+  ].filter(Boolean).flat();
+  const headline = result.ageOnly ? ui.ageOnly : result.discussionRecommended ? ui.discuss : ui.routine;
+  const locale = { ko: 'ko-KR', zh: 'zh-CN', bn: 'bn-BD', ur: 'ur-PK', en: 'en-US' }[lang] || 'en-US';
+  const screenedDate = new Date(result.screenedAt).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+  const timingText = data.lastTest === 'within1' ? ui.recentTest : result.routineScreeningDue ? ui.qTiming : ui.routine;
+  const lifestyleText = result.lifestyleFactors.length ? ui.lifeCount.replace('{count}', result.lifestyleFactors.length) : ui.noFlag;
+  const summaryText = [
+    'AAPICHECK',
+    `${ui.screenedOn}: ${screenedDate}`,
+    `${t('screener.step_age')}: ${data.age}`,
+    '',
+    headline,
+    '',
+    ...questions.flatMap((key, index) => [
+      `${index + 1}. ${ui[key]}`,
+      ...(lang !== 'en' ? [`   ${english[key]}`] : []),
+    ]),
+    '',
+    ui.notDiagnosis,
+    'AAPICheck.org',
+  ].join('\n');
+  const emailHref = `mailto:?subject=${encodeURIComponent(`AAPICHECK — ${ui.card} — ${screenedDate}`)}&body=${encodeURIComponent(summaryText)}`;
+
+  function downloadCard() {
+    const blob = new Blob([summaryText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `AAPICHECK_${result.screenedAt.slice(0, 10)}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function shareCard() {
+    if (navigator.share) {
+      try { await navigator.share({ title: `AAPICHECK — ${ui.card}`, text: summaryText }); return; }
+      catch (error) { if (error.name === 'AbortError') return; }
+    }
+    await navigator.clipboard.writeText(summaryText);
+    setCopied(true); window.setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function copyCard() {
+    await navigator.clipboard.writeText(summaryText);
+    setCopied(true); window.setTimeout(() => setCopied(false), 2000);
+  }
+
+  return <section className="screener screener--result" aria-labelledby="screening-result">
+    <div className="screener__intro"><p className="eyebrow">{t('screener.title')}</p><h1 id="screening-result" tabIndex="-1">{ui.result}</h1><p>{ui.notDiagnosis}</p></div>
+    <div className={`guidance-result ${result.discussionRecommended ? 'guidance-result--discuss' : ''}`}>
+      <div className="guidance-result__headline"><span aria-hidden="true">{result.ageOnly ? '○' : result.discussionRecommended ? '!' : '✓'}</span><h2>{headline}</h2></div>
+      <div className="result-summary-grid">
+        <article><h3>{ui.timing}</h3><p>{timingText}</p></article>
+        <article><h3>{ui.bodyContext}</h3><p>{bodyPresent ? ui.qAsian : ui.noFlag}{result.waistToHeight ? ` · ${ui.waistRatio}: ${result.waistToHeight}` : ''}</p></article>
+        <article><h3>{ui.historyContext}</h3><p>{historyPresent ? ui.qHistory : ui.noFlag}</p></article>
+        <article><h3>{ui.lifeContext}</h3><p>{lifestyleText}</p></article>
+      </div>
+      <section className="visit-card"><div><p className="eyebrow">{ui.card}</p><h2>{ui.card}</h2><p>{ui.cardHelp}</p></div><ol>{questions.map((key) => <li key={key}><strong>{ui[key]}</strong>{lang !== 'en' && <span lang="en">{english[key]}</span>}</li>)}</ol><p className="visit-card__meta">AAPICHECK · {t('screener.step_age')} {data.age} · {ui.screenedOn}: {screenedDate}</p></section>
+      <div className="card-share-panel"><p>🔒 {ui.privacyShare}</p><div className="card-share-actions"><button className="btn btn--primary" type="button" onClick={() => window.print()}>{ui.print}</button><button className="btn btn--secondary" type="button" onClick={downloadCard}>{ui.download}</button><a className="btn btn--secondary" href={emailHref}>{ui.email}</a><button className="btn btn--secondary" type="button" onClick={shareCard}>{ui.share}</button><button className="btn btn--secondary" type="button" onClick={copyCard}>{copied ? ui.copied : ui.copy}</button></div></div>
+      <div className="next-step-box"><div className="button-row"><Link className="btn btn--secondary" to="/resources">{ui.resources}</Link><button className="btn btn--secondary" type="button" onClick={onRestart}>{ui.restart}</button></div></div>
+    </div>
+  </section>;
 }
 
 function NumberField({ label, value, onChange }) { return <label>{label}<input type="number" inputMode="decimal" min="0" value={value} onChange={(e) => onChange(e.target.value)} /></label>; }
