@@ -2992,6 +2992,10 @@ a:hover { color: var(--color-coral-dark); }
 .map-ranking__content { color: #e2e8f0; }
 .map-ranking__content strong,
 .map-ranking__content span { color: inherit; }
+.map-ranking__content > button > span:first-child { color: #e2e8f0 !important; }
+.map-ranking__content > button > span:first-child > span { color: #cbd5e1 !important; }
+.map-ranking__content > div:last-child,
+.map-ranking__content > div:last-child span { color: #cbd5e1 !important; }
 .map-ranking__toggle {
   display: flex;
   width: 100%;
