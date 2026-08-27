@@ -2934,8 +2934,10 @@ a:hover { color: var(--color-coral-dark); }
 
 .home-page { overflow: hidden; }
 .home-hero { position: relative; min-height: 680px; display: grid; align-items: center; isolation: isolate; background: #eee7de; }
-.home-hero__image, .home-hero__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
-.home-hero__image { object-fit: cover; object-position: center; z-index: -2; }
+.home-hero__media, .home-hero__shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.home-hero__media { z-index: -2; overflow: hidden; background: #eee7de; }
+.home-hero__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: 0; transition: opacity 1.6s ease-in-out; }
+.home-hero__image--active { opacity: 1; }
 .home-hero__shade { z-index: -1; background: linear-gradient(90deg, rgba(255,250,243,1) 0%, rgba(255,250,243,.98) 30%, rgba(255,250,243,.72) 49%, rgba(255,250,243,.05) 72%); }
 .home-hero__content { width: min(1240px, calc(100% - 3rem)); margin: 0 auto; padding: 5rem 0; }
 .home-hero__content > * { max-width: 670px; }
@@ -2944,6 +2946,12 @@ a:hover { color: var(--color-coral-dark); }
 .home-hero h1 span::after { content: ''; position: absolute; left: 0; right: 0; height: 6px; bottom: -.12em; background: var(--color-coral); border-radius: 99px; transform: rotate(-1deg); }
 .home-hero__lead { font-size: clamp(1.1rem, 2vw, 1.35rem); max-width: 610px; color: var(--color-text-secondary); margin-bottom: 1.6rem; }
 .home-hero .privacy-note { margin-top: 1rem; }
+.home-hero__controls { position: absolute; z-index: 2; right: max(1.5rem, calc((100vw - 1240px) / 2)); bottom: 1.5rem; display: flex; gap: .1rem; padding: .35rem; border-radius: 999px; background: rgba(8,43,76,.78); }
+.home-hero__controls button { position: relative; width: 38px; height: 38px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.home-hero__controls button:not(.home-hero__pause)::after { content: ''; position: absolute; inset: 11px; border: 2px solid #fff; border-radius: 50%; }
+.home-hero__controls button.is-active::after { background: #fff; box-shadow: 0 0 0 2px rgba(8,43,76,.55); }
+.home-hero__controls .home-hero__pause { color: #fff; font-size: .78rem; font-weight: 900; }
+.home-hero__controls button:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
 .home-intro, .threshold-callout, .bill-home-card { width: min(var(--max-width), calc(100% - 3rem)); margin: 0 auto; }
 .home-intro { padding: 6rem 0 3.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: end; }
 .home-intro h2, .threshold-callout h2, .bill-home-card h2 { font-size: clamp(2.1rem, 4vw, 3.4rem); letter-spacing: -.035em; }
@@ -3033,7 +3041,7 @@ a:hover { color: var(--color-coral-dark); }
   :root { --nav-height: 76px; }
   .navbar__inner { padding: .5rem .75rem; }.brand-lockup__wordmark { font-size: 1.2rem; }.text-size-toggle { display: none; }.lang-switcher { padding: 0 .25rem; }.lang-switcher select { max-width: 86px; }
   .bill-banner__inner { display: grid; padding: .7rem 1rem; }.bill-banner__actions span { display: none; }
-  .home-hero { min-height: 720px; }.home-hero__image { object-position: 66% center; }.home-hero__shade { background: linear-gradient(180deg, rgba(255,250,243,.9), rgba(255,250,243,.98) 68%, #fffaf3); }.home-hero__content { width: min(100% - 2rem, 1240px); padding: 3rem 0; align-self: end; }.home-hero h1 { font-size: 3.25rem; }
+  .home-hero { min-height: 720px; }.home-hero__image { object-position: 66% center; }.home-hero__shade { background: linear-gradient(180deg, rgba(255,250,243,.9), rgba(255,250,243,.98) 68%, #fffaf3); }.home-hero__content { width: min(100% - 2rem, 1240px); padding: 3rem 0 5rem; align-self: end; }.home-hero h1 { font-size: 3.25rem; }.home-hero__controls { right: 1rem; bottom: 1rem; }
   .home-intro, .threshold-callout, .bill-home-card, .pathway-grid, .bill-page__hero-content, .bill-page__section, .source-box, .bill-next { width: calc(100% - 2rem); }
   .home-intro { padding-top: 4rem; }.threshold-callout { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }.threshold-callout__number { font-size: 7rem; }.bill-home-card { margin-top: 4rem; margin-bottom: 4rem; padding: 2rem; }
   .form-grid, .form-grid--three { grid-template-columns: 1fr; }.factor-list > div { grid-template-columns: 1fr; gap: .2rem; }
