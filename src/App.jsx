@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BillBanner from './components/BillBanner';
 import ScrollToTop from './components/ScrollToTop';
+import AccessibilityTools from './components/AccessibilityTools';
 import LandingPage from './pages/LandingPage';
 import { useI18n } from './i18n/i18nProvider';
 
@@ -31,6 +32,7 @@ function App() {
       <ScrollToTop />
       <Navbar />
       <BillBanner />
+      <AccessibilityTools />
       <main id="main-content" tabIndex="-1">
         <Suspense fallback={<div className="page-loader" role="status">Loading…</div>}><Routes>
           <Route path="/" element={<LandingPage />} />

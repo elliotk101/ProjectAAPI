@@ -7,14 +7,6 @@ import Logo from './Logo';
 function Navbar() {
   const { t } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [largeText, setLargeText] = useState(() => {
-    try { return localStorage.getItem('aapicheck-text-size') === 'large'; } catch { return false; }
-  });
-
-  useEffect(() => {
-    document.documentElement.dataset.textSize = largeText ? 'large' : 'normal';
-    try { localStorage.setItem('aapicheck-text-size', largeText ? 'large' : 'normal'); } catch { /* no-op */ }
-  }, [largeText]);
 
   useEffect(() => {
     const closeOnEscape = (event) => event.key === 'Escape' && setMobileOpen(false);
@@ -43,10 +35,6 @@ function Navbar() {
           ))}
         </div>
         <div className="navbar__right">
-          <button type="button" className="text-size-toggle" aria-pressed={largeText}
-            onClick={() => setLargeText((value) => !value)} title={t('nav.text_size')}>
-            <span aria-hidden="true">A+</span><span className="sr-only">{t('nav.text_size')}</span>
-          </button>
           <LanguageSwitcher />
           <button type="button" className="navbar__mobile-toggle" onClick={() => setMobileOpen((value) => !value)}
             aria-expanded={mobileOpen} aria-controls="mobile-navigation" aria-label={mobileOpen ? t('nav.close_menu') : t('nav.open_menu')}>
