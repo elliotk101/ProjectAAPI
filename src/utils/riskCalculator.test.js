@@ -14,7 +14,21 @@ test('calculateBMI rejects invalid measurements', () => {
 test('guidance recommends a conversation at the Asian American BMI threshold', () => {
   const result = evaluateScreeningGuidance({ age: 25, bmi: 23, familyHistory: false, gestational: false, activityLevel: 'daily' });
   assert.equal(result.discussionRecommended, true);
-  assert.equal(result.screeningFactorCount, 1);
+  assert.equal(result.clinicalFactorCount, 1);
+});
+
+test('age alone suggests routine screening timing without a clinical warning', () => {
+  const result = evaluateScreeningGuidance({ age: 70, bmi: 21, lastTest: 'within3', familyHistory: false, gestational: false, activityLevel: 'daily' });
+  assert.equal(result.discussionRecommended, false);
+  assert.equal(result.routineScreeningDue, true);
+  assert.equal(result.ageOnly, true);
+});
+
+test('waist-to-height ratio adds body context without creating a score', () => {
+  const result = evaluateScreeningGuidance({ age: 25, bmi: 21, heightCm: 160, waistCm: 82, lastTest: 'within3' });
+  assert.equal(result.waistToHeight, 0.51);
+  assert.equal(result.factors.find((factor) => factor.key === 'centralAdiposity').present, true);
+  assert.equal('score' in result, false);
 });
 
 test('activity is shown as context but does not create a diagnostic score', () => {

@@ -47,7 +47,6 @@ function ResourceDirectory() {
       <div className="section-heading">
         <h1 style={{ fontSize: 'var(--fs-3xl)' }}>{t('directory.title')}</h1>
         <p>{t('directory.subtitle')}</p>
-        <p className="data-note">{t('directory.subtitle')}</p>
       </div>
 
       {/* Search */}
