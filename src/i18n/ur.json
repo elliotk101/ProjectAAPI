@@ -137,7 +137,14 @@
     "popup_diabetes": "ذیابیطس کی شرح",
     "popup_aapi_pct": "AAPI آبادی",
     "popup_resources": "صحت کے وسائل",
-    "top_areas": "اعلیٰ علاقے"
+    "top_areas": "اعلیٰ علاقے",
+    "choose_area": "نقشے کا علاقہ منتخب کریں", "scope_nyc": "NYC محلوں کا صحت ڈیٹا", "scope_nys": "نیو یارک اسٹیٹ ہسپتال",
+    "nys_title": "نیو یارک اسٹیٹ ہسپتال تلاش کریں", "nys_intro": "نام، شہر یا کاؤنٹی سے سرکاری ہسپتال ریکارڈ تلاش کریں۔",
+    "search_hospitals": "ہسپتال تلاش کریں", "search_placeholder": "ہسپتال، شہر یا کاؤنٹی", "county": "کاؤنٹی", "all_counties": "تمام کاؤنٹیز", "hospitals_found": "ہسپتال ملے",
+    "nys_hospital": "NYS ہسپتال ریکارڈ", "hospital_details": "ہسپتال کی تفصیل", "close_details": "تفصیل بند کریں", "address": "پتہ", "ownership": "ملکیت کی قسم",
+    "call": "فون", "directions": "راستہ دیکھیں", "official_profile": "سرکاری NYS ہسپتال پروفائل کھولیں", "verify_services": "جانے سے پہلے ذیابیطس اسکریننگ، انشورنس، رسائی اور زبان کی مدد کی فون پر تصدیق کریں۔",
+    "view_details": "تفصیل دیکھیں", "loading_hospitals": "سرکاری نیو یارک اسٹیٹ ہسپتال ڈیٹا لوڈ ہو رہا ہے…", "data_unavailable": "ہسپتال ڈیٹا عارضی طور پر دستیاب نہیں۔",
+    "try_again": "NYC نقشہ دستیاب ہے۔ اسٹیٹ ڈیٹا دوبارہ آزمائیں۔", "retry": "دوبارہ کوشش", "no_hospitals": "کوئی ہسپتال نہیں ملا۔ دوسرا نام، شہر یا کاؤنٹی آزمائیں۔", "data_source": "سرکاری عوامی طبی سہولت کے ریکارڈ۔ خدمات کی تصدیق ہسپتال سے براہ راست کریں۔ ماخذ:"
   },
   "directory": {
     "title": "کمیونٹی وسائل ڈائریکٹری",
@@ -192,7 +199,7 @@
     "section_health_title": "صحت ڈیٹا دستبرداری",
     "section_health_text": "رسک اسکرینر میں داخل کردہ تمام صحت اسکریننگ ڈیٹا صرف کلائنٹ سائیڈ پر پروسیس ہوتا ہے۔",
     "section_third_party_title": "تیسری پارٹی خدمات",
-    "section_third_party_text": "ہمارا پلیٹ فارم نقشے کے ڈیٹا کے لیے OpenStreetMap اور نقشے کی ٹائلوں کے لیے CARTO استعمال کرتا ہے۔",
+    "section_third_party_text": "نقشے میں OpenStreetMap ٹائلز اور NYC Open Data و New York State Health Data کے عوامی ریکارڈ استعمال ہوتے ہیں۔ یہ خدمات اپنی رازداری پالیسی کے تحت بنیادی درخواست کی معلومات پراسیس کر سکتی ہیں۔",
     "section_rights_title": "آپ کے حقوق",
     "section_rights_text": "آپ کو اپنے براؤزر کی ترتیبات کے ذریعے کسی بھی وقت لوکل اسٹوریج ڈیٹا صاف کرنے کا حق ہے۔",
     "section_contact_title": "ہم سے رابطہ کریں",

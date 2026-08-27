@@ -1008,6 +1008,44 @@ ul, ol {
   position: relative;
 }
 
+.map-scope-switch {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border: 1px solid #9aa9b5;
+  border-radius: 999px;
+  background: #fff;
+}
+.map-scope-switch button { min-height: 40px; padding: .45rem 1rem; border-radius: 999px; color: var(--color-navy); font-weight: 800; }
+.map-scope-switch button.is-active { background: var(--color-navy); color: #fff; }
+.map-page--nys .nyc-layer-controls,
+.map-page--nys .nyc-borough-controls,
+.map-page--nys .map-ranking { display: none !important; }
+.nys-map-filters { display: flex; flex: 1 1 520px; align-items: center; gap: .65rem; margin-left: auto; }
+.nys-map-filters label { flex: 1 1 200px; }
+.nys-map-filters input,
+.nys-map-filters select { width: 100%; min-height: 44px; padding: .55rem .75rem; border: 2px solid #9aa9b5; border-radius: .6rem; background: #fff; color: var(--color-navy); }
+.nys-map-filters strong { flex: 0 0 auto; color: var(--color-navy); font-size: var(--fs-sm); }
+.nys-map-filters > p { flex: 1 0 100%; margin: 0; color: var(--color-text-secondary); font-size: var(--fs-xs); }
+.nys-map-filters > p a { color: #075985; font-weight: 800; text-decoration: underline; }
+.map-status { position: absolute; top: 1rem; left: 50%; z-index: 850; display: grid; gap: .35rem; transform: translateX(-50%); padding: .9rem 1.1rem; border: 1px solid #9aa9b5; border-radius: .75rem; background: #fff; color: var(--color-navy); box-shadow: var(--shadow-lg); text-align: center; }
+.map-status button { color: #075985; font-weight: 800; text-decoration: underline; }
+.map-status--error { border-color: #dc2626; }
+.nys-hospital-popup { display: grid; gap: .4rem; min-width: 210px; }
+.nys-hospital-popup span { color: #cbd5e1; }
+.nys-hospital-popup button { justify-self: start; color: #93c5fd; font-weight: 800; text-decoration: underline; }
+.map-detail-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+.map-detail-heading h3 { margin-top: .65rem; color: #fff; font-family: var(--font-heading); font-size: var(--fs-xl); line-height: 1.25; }
+.map-detail-close { min-width: 44px; min-height: 44px; color: #fff; font-size: 1.75rem; line-height: 1; }
+.hospital-facts { display: grid; gap: .8rem; margin: 1rem 0 1.25rem; }
+.hospital-facts div { padding-bottom: .8rem; border-bottom: 1px solid rgba(255,255,255,.16); }
+.hospital-facts dt { color: #cbd5e1; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; }
+.hospital-facts dd { margin-top: .25rem; color: #fff; line-height: 1.5; }
+.hospital-actions { display: grid; gap: .65rem; }
+.hospital-actions .btn { width: 100%; text-align: center; }
+.map-official-link { color: #bfdbfe; font-weight: 800; text-align: center; text-decoration: underline; }
+.map-detail-caution { margin-top: 1rem; color: #dbeafe !important; font-size: var(--fs-xs); line-height: 1.5; }
+
 .map-page__sidebar {
   position: absolute;
   top: var(--space-4);
@@ -1029,6 +1067,10 @@ ul, ol {
 .map-page__sidebar [style*="--color-text-muted"] { color: #cbd5e1 !important; }
 
 @media (max-width: 768px) {
+  .map-scope-switch { width: 100%; }
+  .nys-map-filters { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin-left: 0; }
+  .nys-map-filters strong,
+  .nys-map-filters > p { grid-column: 1 / -1; }
   .map-page__sidebar {
     position: relative;
     width: 100%;

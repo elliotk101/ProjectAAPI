@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/i18nProvider';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { NYC_NEIGHBORHOODS, HEALTH_RESOURCES } from '../services/nycOpenData';
+import { getNysHospitals, formatPhone } from '../services/nysOpenData';
 import 'leaflet/dist/leaflet.css';
 
 /* ======================================================
@@ -84,6 +85,30 @@ function FitBounds({ locations }) {
    ====================================================== */
 function Sidebar({ selected, activeLayer, onClose, t }) {
   if (!selected) return null;
+
+  if (selected._type === 'nysHospital') {
+    const hospital = selected;
+    const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hospital.address)}`;
+    return (
+      <aside className="map-page__sidebar nys-hospital-detail" aria-label={t('map.hospital_details')}>
+        <div className="map-detail-heading">
+          <div><span className="badge badge--indigo">{t('map.nys_hospital')}</span><h3>{hospital.name}</h3></div>
+          <button onClick={onClose} className="map-detail-close" aria-label={t('map.close_details')}>×</button>
+        </div>
+        <dl className="hospital-facts">
+          <div><dt>{t('map.address')}</dt><dd>{hospital.address}</dd></div>
+          <div><dt>{t('map.county')}</dt><dd>{hospital.county}</dd></div>
+          {hospital.ownership && <div><dt>{t('map.ownership')}</dt><dd>{hospital.ownership}</dd></div>}
+        </dl>
+        <div className="hospital-actions">
+          {hospital.phone && <a className="btn btn--primary" href={`tel:${hospital.phone}`}>{t('map.call')} {formatPhone(hospital.phone)}</a>}
+          <a className="btn btn--secondary" href={directions} target="_blank" rel="noreferrer">{t('map.directions')}</a>
+          <a className="map-official-link" href="https://profiles.health.ny.gov/hospital/" target="_blank" rel="noreferrer">{t('map.official_profile')} ↗</a>
+        </div>
+        <p className="map-detail-caution">{t('map.verify_services')}</p>
+      </aside>
+    );
+  }
 
   // Resource item sidebar
   if (activeLayer === 'resources' && selected._type === 'resource') {
@@ -221,16 +246,34 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
    ====================================================== */
 function HealthMap() {
   const { t } = useI18n();
+  const [scope, setScope] = useState('nyc');
   const [selected, setSelected] = useState(null);
   const [activeLayer, setActiveLayer] = useState('diabetes');
   const [boroughFilter, setBoroughFilter] = useState('All');
   const [rankingOpen, setRankingOpen] = useState(() =>
     typeof window === 'undefined' || !window.matchMedia('(max-width: 650px)').matches
   );
+  const [nysHospitals, setNysHospitals] = useState([]);
+  const [nysStatus, setNysStatus] = useState('idle');
+  const [nysRequestKey, setNysRequestKey] = useState(0);
+  const [hospitalSearch, setHospitalSearch] = useState('');
+  const [countyFilter, setCountyFilter] = useState('All');
 
   useEffect(() => {
-    document.title = `${t('map.title')} — AAPICHECK`;
-  }, [t]);
+    if (scope !== 'nys') return undefined;
+    const controller = new AbortController();
+    setNysStatus('loading');
+    getNysHospitals(controller.signal)
+      .then((records) => { setNysHospitals(records); setNysStatus('success'); })
+      .catch((error) => {
+        if (error.name !== 'AbortError') setNysStatus('error');
+      });
+    return () => controller.abort();
+  }, [scope, nysRequestKey]);
+
+  useEffect(() => {
+    document.title = `${scope === 'nyc' ? t('map.title') : t('map.nys_title')} — AAPICHECK`;
+  }, [t, scope]);
 
   const boroughs = ['All', 'Queens', 'Brooklyn', 'Manhattan', 'Bronx', 'Staten Island'];
 
@@ -249,6 +292,15 @@ function HealthMap() {
     });
   }, [boroughFilter]);
 
+  const counties = useMemo(() => ['All', ...[...new Set(nysHospitals.map((hospital) => hospital.county).filter(Boolean))].sort()], [nysHospitals]);
+  const filteredHospitals = useMemo(() => {
+    const query = hospitalSearch.trim().toLowerCase();
+    return nysHospitals.filter((hospital) =>
+      (countyFilter === 'All' || hospital.county === countyFilter)
+      && (!query || `${hospital.name} ${hospital.city} ${hospital.county} ${hospital.address}`.toLowerCase().includes(query))
+    );
+  }, [nysHospitals, countyFilter, hospitalSearch]);
+
   // Sorted neighborhoods for the legend / ranking
   const sorted = useMemo(() => {
     const arr = [...filteredNeighborhoods];
@@ -265,17 +317,21 @@ function HealthMap() {
   ];
 
   return (
-    <div className="map-page page-enter">
+    <div className={`map-page page-enter map-page--${scope}`}>
       {/* Controls */}
       <div className="map-page__controls">
+        <div className="map-scope-switch" role="group" aria-label={t('map.choose_area')}>
+          <button className={scope === 'nyc' ? 'is-active' : ''} onClick={() => { setScope('nyc'); setSelected(null); }} aria-pressed={scope === 'nyc'}>{t('map.scope_nyc')}</button>
+          <button className={scope === 'nys' ? 'is-active' : ''} onClick={() => { setScope('nys'); setSelected(null); }} aria-pressed={scope === 'nys'}>{t('map.scope_nys')}</button>
+        </div>
         <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--fs-lg)', marginRight: 'var(--space-4)', whiteSpace: 'nowrap' }}>
-          🗺️ {t('map.title')}
+          🗺️ {scope === 'nyc' ? t('map.title') : t('map.nys_title')}
         </h2>
 
-        <p className="map-data-note">{t('map.click_prompt')}</p>
+        <p className="map-data-note">{scope === 'nyc' ? t('map.click_prompt') : t('map.nys_intro')}</p>
 
         {/* Layer toggles */}
-        <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <div className="nyc-layer-controls" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
           {layers.map((layer) => (
             <button
               key={layer.key}
@@ -290,7 +346,7 @@ function HealthMap() {
         </div>
 
         {/* Borough filter */}
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <div className="nyc-borough-controls" style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
           {boroughs.map((b) => (
             <button
               key={b}
@@ -304,6 +360,12 @@ function HealthMap() {
             </button>
           ))}
         </div>
+        {scope === 'nys' && <div className="nys-map-filters">
+          <label><span className="sr-only">{t('map.search_hospitals')}</span><input type="search" value={hospitalSearch} onChange={(event) => setHospitalSearch(event.target.value)} placeholder={t('map.search_placeholder')} /></label>
+          <label><span className="sr-only">{t('map.county')}</span><select value={countyFilter} onChange={(event) => setCountyFilter(event.target.value)}>{counties.map((county) => <option key={county} value={county}>{county === 'All' ? t('map.all_counties') : county}</option>)}</select></label>
+          <strong aria-live="polite">{nysStatus === 'success' ? `${filteredHospitals.length} ${t('map.hospitals_found')}` : ''}</strong>
+          <p>{t('map.data_source')} <a href="https://health.data.ny.gov/Health/Health-Facility-General-Information/vn5v-hh5r" target="_blank" rel="noreferrer">NYS Health Data ↗</a></p>
+        </div>}
       </div>
 
       {/* Map + Sidebar */}
@@ -318,10 +380,10 @@ function HealthMap() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <FitBounds locations={filteredNeighborhoods} />
+          <FitBounds locations={scope === 'nyc' ? filteredNeighborhoods : filteredHospitals} />
 
           {/* ── DIABETES LAYER ── */}
-          {activeLayer === 'diabetes' && filteredNeighborhoods.map((n) => {
+          {scope === 'nyc' && activeLayer === 'diabetes' && filteredNeighborhoods.map((n) => {
             const color = getDiabetesColor(n.diabetesPrevalence);
             const radius = Math.max(10, (n.diabetesPrevalence / 23) * 24);
             return (
@@ -353,7 +415,7 @@ function HealthMap() {
           })}
 
           {/* ── AAPI POPULATION LAYER ── */}
-          {activeLayer === 'aapi' && filteredNeighborhoods.map((n) => {
+          {scope === 'nyc' && activeLayer === 'aapi' && filteredNeighborhoods.map((n) => {
             const color = getAAPIColor(n.aapiPopulation);
             // Size by actual count, normalized
             const maxCount = Math.max(...filteredNeighborhoods.map((x) => x.aapiCount || 0));
@@ -453,7 +515,18 @@ function HealthMap() {
               ))}
             </>
           )}
+          {scope === 'nys' && filteredHospitals.map((hospital) => (
+            <CircleMarker key={hospital.id} center={[hospital.lat, hospital.lng]} radius={7}
+              pathOptions={{ color: '#075985', fillColor: '#0ea5e9', fillOpacity: .78, weight: 2 }}
+              eventHandlers={{ click: () => setSelected(hospital) }}>
+              <Popup><div className="nys-hospital-popup"><strong>{hospital.name}</strong><span>{hospital.city}, {hospital.county} {t('map.county')}</span><button type="button" onClick={() => setSelected(hospital)}>{t('map.view_details')}</button></div></Popup>
+            </CircleMarker>
+          ))}
         </MapContainer>
+
+        {scope === 'nys' && nysStatus === 'loading' && <div className="map-status" role="status">{t('map.loading_hospitals')}</div>}
+        {scope === 'nys' && nysStatus === 'error' && <div className="map-status map-status--error" role="alert"><strong>{t('map.data_unavailable')}</strong><span>{t('map.try_again')}</span><button type="button" onClick={() => setNysRequestKey((key) => key + 1)}>{t('map.retry')}</button></div>}
+        {scope === 'nys' && nysStatus === 'success' && filteredHospitals.length === 0 && <div className="map-status" role="status">{t('map.no_hospitals')}</div>}
 
         {/* Sidebar */}
         <Sidebar
@@ -527,7 +600,7 @@ function HealthMap() {
           )}
 
           {/* Resource type legend */}
-          {activeLayer === 'resources' && (
+          {scope === 'nyc' && activeLayer === 'resources' && (
             <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: 4 }}>
               {Object.entries(RESOURCE_ICONS).map(([type, config]) => (
                 <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

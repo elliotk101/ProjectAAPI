@@ -137,7 +137,14 @@
     "popup_diabetes": "Diabetes Prevalence",
     "popup_aapi_pct": "AAPI Population",
     "popup_resources": "Health Resources",
-    "top_areas": "Top Areas"
+    "top_areas": "Top Areas",
+    "choose_area": "Choose map area", "scope_nyc": "NYC neighborhood data", "scope_nys": "New York State hospitals",
+    "nys_title": "New York State Hospital Finder", "nys_intro": "Search official New York State hospital records by name, city, or county.",
+    "search_hospitals": "Search hospitals", "search_placeholder": "Hospital, city, or county", "county": "County", "all_counties": "All counties", "hospitals_found": "hospitals found",
+    "nys_hospital": "NYS hospital record", "hospital_details": "Hospital details", "close_details": "Close details", "address": "Address", "ownership": "Ownership",
+    "call": "Call", "directions": "Get directions", "official_profile": "Open official NYS Hospital Profiles", "verify_services": "Call before visiting to confirm diabetes screening, insurance, accessibility, and language assistance.",
+    "view_details": "View details", "loading_hospitals": "Loading official New York State hospital data…", "data_unavailable": "Hospital data is temporarily unavailable.",
+    "try_again": "The NYC map remains available. Please try the state data again.", "retry": "Try again", "no_hospitals": "No hospitals match this search. Try another name, city, or county.", "data_source": "Official public facility records. Confirm services directly with the hospital. Source:"
   },
   "directory": {
     "title": "Community Resource Directory",
@@ -192,7 +199,7 @@
     "section_health_title": "Health Data Disclaimer",
     "section_health_text": "All health screening data entered into our Risk Screener is processed client-side only. No health information is stored, transmitted, or shared with any third party. Your screening results are generated in real-time and are not retained after you close or navigate away from the page.",
     "section_third_party_title": "Third-Party Services",
-    "section_third_party_text": "Our platform uses OpenStreetMap for map data and CARTO for map tiles. These services may collect anonymized usage data according to their own privacy policies. We also link to external resources (NYC Open Data, nonprofit organizations) whose privacy practices we do not control.",
+    "section_third_party_text": "Our platform uses OpenStreetMap map tiles and public records from NYC Open Data and New York State Health Data. These services may process basic request information under their own privacy policies. We also link to external organizations whose privacy practices we do not control.",
     "section_rights_title": "Your Rights",
     "section_rights_text": "You have the right to: clear your local storage data at any time through your browser settings, opt out of any communications, and request information about what data (if any) we hold. Since we process data client-side, there is typically no server-side data to delete.",
     "section_contact_title": "Contact Us",
