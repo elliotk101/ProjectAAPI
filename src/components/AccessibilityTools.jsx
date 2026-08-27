@@ -11,6 +11,8 @@ const COPY = {
 
 const DEFAULTS = { textSize: 'normal', contrast: false, colorAssist: false, underlineLinks: false, reduceMotion: false };
 
+// Keep accessibility preferences local to the visitor's device.
+
 function loadSettings() {
   try { return { ...DEFAULTS, ...JSON.parse(localStorage.getItem('aapicheck-accessibility') || '{}') }; }
   catch { return DEFAULTS; }
