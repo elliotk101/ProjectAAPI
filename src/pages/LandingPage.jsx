@@ -112,6 +112,10 @@ function LandingPage() {
         <div className="button-row"><Link to="/bill-s634b" className="btn btn--primary">{t('bill.banner_cta')}</Link>
           <a className="btn btn--secondary" href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">{t('bill.official_record')}</a></div>
       </section>
+      <section className="language-home-card">
+        <div><p className="eyebrow">S6288B / A387B · CHAPTER 614</p><h2>{t('compliance.info_title')}</h2><p>{t('compliance.info_text')}</p></div>
+        <Link to="/compliance" className="btn btn--primary">{t('nav.compliance')} →</Link>
+      </section>
     </div>
   );
 }

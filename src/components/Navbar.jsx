@@ -19,6 +19,7 @@ function Navbar() {
     ['/screener', t('nav.screener')],
     ['/resources', t('nav.resources')],
     ['/map', t('nav.map')],
+    ['/compliance', t('nav.compliance')],
     ['/bill-s634b', t('nav.bill')],
   ];
 

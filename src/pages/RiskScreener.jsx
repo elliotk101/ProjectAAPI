@@ -39,6 +39,22 @@ Object.assign(COPY.zh, { timing: '筛查时间', recentTest: '您填写的是过
 Object.assign(COPY.bn, { timing: 'স্ক্রিনিংয়ের সময়', recentTest: 'আপনি গত এক বছরের মধ্যে রক্তে শর্করা বা A1C পরীক্ষা করেছেন বলে জানিয়েছেন।', qNext: 'সাম্প্রতিক ফল স্বাভাবিক হলে আবার কখন পরীক্ষা করাব?', waistRatio: 'কোমর-উচ্চতা অনুপাত', lifeCount: 'ইচ্ছা করলে {count}টি জীবনযাত্রার বিষয় আলোচনা করতে পারেন।', download: 'ডিভাইসে ডাউনলোড', email: 'ইমেইল', share: 'ফোনে শেয়ার', copy: 'লেখা কপি', copied: 'কপি হয়েছে', screenedOn: 'যাচাইয়ের তারিখ', privacyShare: 'আপনি ডাউনলোড, কপি, ইমেইল বা শেয়ার না করা পর্যন্ত কার্ডটি ডিভাইসেই থাকে। নির্বাচিত অ্যাপ বা ইমেইল সেবায় একটি কপি থাকতে পারে।' });
 Object.assign(COPY.ur, { timing: 'اسکریننگ کا وقت', recentTest: 'آپ نے بتایا کہ گزشتہ ایک سال میں بلڈ شوگر یا A1C ٹیسٹ ہوا ہے۔', qNext: 'اگر حالیہ نتیجہ نارمل تھا تو دوبارہ اسکریننگ کب کرانی چاہیے؟', waistRatio: 'کمر اور قد کا تناسب', lifeCount: 'اگر چاہیں تو طرزِ زندگی کے {count} موضوعات پر بات کر سکتے ہیں۔', download: 'آلے پر ڈاؤن لوڈ', email: 'ای میل', share: 'فون پر شیئر', copy: 'متن کاپی کریں', copied: 'کاپی ہوگیا', screenedOn: 'جانچ کی تاریخ', privacyShare: 'جب تک آپ خود ڈاؤن لوڈ، کاپی، ای میل یا شیئر نہ کریں یہ کارڈ اسی آلے پر رہتا ہے۔ منتخب ایپ یا ای میل سروس ایک نقل رکھ سکتی ہے۔' });
 
+const RESULT_ACTION_COPY = {
+  en: { discussTitle:'What to discuss with a healthcare professional', discussHelp:'These questions are based only on the answers you selected.', nextTitle:'Choose your next step', findHospital:'Find a New York hospital', findHospitalHelp:'Search official New York State hospital records by name, city, or county.', languageHelp:'Prepare an interpreter request', languageHelpText:'Make a bilingual card to show hospital staff.', communityHelp:'Find community support', communityHelpText:'Browse AAPI-serving organizations and language-friendly resources.' },
+  ko: { discussTitle:'의료진과 상의할 내용', discussHelp:'아래 질문은 선택한 답변만을 바탕으로 준비했습니다.', nextTitle:'다음 단계 선택', findHospital:'뉴욕주 병원 찾기', findHospitalHelp:'병원명·도시·카운티로 뉴욕주 공식 병원 기록을 검색하세요.', languageHelp:'통역 요청 준비', languageHelpText:'병원 직원에게 보여줄 이중언어 카드를 만드세요.', communityHelp:'커뮤니티 지원 찾기', communityHelpText:'AAPI 지원 단체와 언어 친화 자원을 찾아보세요.' },
+  zh: { discussTitle:'与医务人员讨论的内容', discussHelp:'以下问题仅根据您选择的答案生成。', nextTitle:'选择下一步', findHospital:'查找纽约州医院', findHospitalHelp:'按名称、城市或县搜索纽约州官方医院记录。', languageHelp:'准备口译请求', languageHelpText:'制作可向医院工作人员出示的双语卡。', communityHelp:'查找社区支持', communityHelpText:'浏览服务AAPI社区的机构和语言资源。' },
+  bn: { discussTitle:'চিকিৎসকের সঙ্গে যা আলোচনা করবেন', discussHelp:'প্রশ্নগুলো শুধু আপনার নির্বাচিত উত্তরের ভিত্তিতে তৈরি।', nextTitle:'পরবর্তী ধাপ বেছে নিন', findHospital:'নিউ ইয়র্ক হাসপাতাল খুঁজুন', findHospitalHelp:'নাম, শহর বা কাউন্টি দিয়ে সরকারি হাসপাতাল রেকর্ড খুঁজুন।', languageHelp:'দোভাষীর অনুরোধ প্রস্তুত করুন', languageHelpText:'হাসপাতাল কর্মীদের দেখানোর জন্য দ্বিভাষিক কার্ড তৈরি করুন।', communityHelp:'কমিউনিটি সহায়তা খুঁজুন', communityHelpText:'AAPI সংগঠন ও ভাষা সহায়ক সংস্থান দেখুন।' },
+  ur: { discussTitle:'طبی ماہر سے کیا بات کریں', discussHelp:'یہ سوالات صرف آپ کے منتخب جوابات پر مبنی ہیں۔', nextTitle:'اگلا قدم منتخب کریں', findHospital:'نیویارک ہسپتال تلاش کریں', findHospitalHelp:'نام، شہر یا کاؤنٹی سے سرکاری ہسپتال ریکارڈ تلاش کریں۔', languageHelp:'مترجم کی درخواست تیار کریں', languageHelpText:'ہسپتال کے عملے کو دکھانے کے لیے دو لسانی کارڈ بنائیں۔', communityHelp:'کمیونٹی مدد تلاش کریں', communityHelpText:'AAPI تنظیمیں اور زبان دوست وسائل دیکھیں۔' },
+};
+
+const FACTOR_QUESTIONS = {
+  en: { bmi:'Does the Asian-ancestry BMI 23 screening threshold mean I should be tested now?', centralAdiposity:'How should my waist measurement affect screening timing or prevention planning?', family:'How does my family history affect how often I should be screened?', gestational:'Does my history of gestational diabetes mean I should have an A1C or glucose test now?', hypertension:'How do my blood pressure history or medicines affect diabetes screening?', cardiovascular:'How does my heart disease or stroke history affect diabetes screening?', pcos:'Does PCOS change when or how often I should be screened?', prediabetes:'I was previously told I had prediabetes or elevated blood sugar. Which follow-up test should I have, and when?' },
+  ko: { bmi:'아시아계 BMI 23 검사 기준을 고려할 때 지금 당뇨병 검사를 받아야 하나요?', centralAdiposity:'제 허리둘레가 검사 시기나 예방 계획에 어떤 영향을 주나요?', family:'가족력이 검사 주기에 어떤 영향을 주나요?', gestational:'임신성 당뇨 이력이 있다면 지금 A1C 또는 혈당검사를 받아야 하나요?', hypertension:'고혈압 이력이나 복용 약이 당뇨병 검사에 어떤 영향을 주나요?', cardiovascular:'심장질환 또는 뇌졸중 이력이 당뇨병 검사에 어떤 영향을 주나요?', pcos:'다낭성난소증후군이 검사 시기나 주기를 바꾸나요?', prediabetes:'이전에 전당뇨 또는 혈당 상승 이야기를 들었습니다. 어떤 추적검사를 언제 받아야 하나요?' },
+  zh: { bmi:'考虑亚裔BMI 23筛查标准，我现在需要做糖尿病检测吗？', centralAdiposity:'我的腰围会如何影响筛查时间或预防计划？', family:'家族史会如何影响我的筛查频率？', gestational:'妊娠糖尿病史是否表示我现在需要A1C或血糖检测？', hypertension:'高血压或相关药物会如何影响糖尿病筛查？', cardiovascular:'心脏病或中风史会如何影响糖尿病筛查？', pcos:'PCOS会改变筛查时间或频率吗？', prediabetes:'我曾被告知有前期糖尿病或血糖偏高；应做什么复查，何时做？' },
+  bn: { bmi:'এশীয়দের BMI ২৩ মান অনুযায়ী এখন কি ডায়াবেটিস পরীক্ষা করা উচিত?', centralAdiposity:'কোমরের মাপ স্ক্রিনিং বা প্রতিরোধ পরিকল্পনায় কী প্রভাব ফেলে?', family:'পারিবারিক ইতিহাস কত ঘন ঘন স্ক্রিনিং দরকার তা কীভাবে বদলায়?', gestational:'গর্ভকালীন ডায়াবেটিসের ইতিহাস থাকলে এখন A1C বা গ্লুকোজ পরীক্ষা দরকার?', hypertension:'উচ্চ রক্তচাপ বা ওষুধ ডায়াবেটিস স্ক্রিনিংয়ে কী প্রভাব ফেলে?', cardiovascular:'হৃদরোগ বা স্ট্রোকের ইতিহাস স্ক্রিনিংয়ে কী প্রভাব ফেলে?', pcos:'PCOS কি স্ক্রিনিংয়ের সময় বা ঘনত্ব বদলায়?', prediabetes:'আগে প্রিডায়াবেটিস বা উচ্চ শর্করা বলা হয়েছিল; কোন ফলো-আপ পরীক্ষা কখন করা উচিত?' },
+  ur: { bmi:'ایشیا سے تعلق رکھنے والوں کے BMI 23 معیار کے مطابق کیا مجھے اب ذیابیطس ٹیسٹ کرانا چاہیے؟', centralAdiposity:'کمر کی پیمائش اسکریننگ یا بچاؤ کے منصوبے پر کیسے اثر انداز ہوتی ہے؟', family:'خاندانی تاریخ اسکریننگ کی تعداد کو کیسے بدلتی ہے؟', gestational:'حمل کی ذیابیطس کی تاریخ ہو تو کیا اب A1C یا گلوکوز ٹیسٹ چاہیے؟', hypertension:'بلڈ پریشر یا اس کی دوا ذیابیطس اسکریننگ پر کیسے اثر ڈالتی ہے؟', cardiovascular:'دل کی بیماری یا فالج کی تاریخ اسکریننگ پر کیسے اثر ڈالتی ہے؟', pcos:'کیا PCOS اسکریننگ کے وقت یا وقفے کو بدلتا ہے؟', prediabetes:'پہلے پری ذیابیطس یا بلند شوگر بتائی گئی تھی؛ کون سا فالو اپ ٹیسٹ کب ہونا چاہیے؟' },
+};
+
 const INITIAL = { mode: 'self', age: '', lastTest: '', heightFt: '', heightIn: '', weightLbs: '', heightCm: '', weightKg: '', waistIn: '', waistCm: '', familyHistory: '', gestational: '', hypertension: '', cardiovascular: '', pcos: '', priorPrediabetes: '', activityLevel: '', sugaryDrinks: '', afterMeal: '', sleep: '' };
 
 function RiskScreener() {
@@ -102,15 +118,20 @@ function RiskScreener() {
 function Result({ result, data, copy, english, lang, t, onRestart }) {
   const [copied, setCopied] = useState(false);
   const ui = { ...english, ...copy };
+  const actionCopy = RESULT_ACTION_COPY[lang] || RESULT_ACTION_COPY.en;
+  const factorCopy = FACTOR_QUESTIONS[lang] || FACTOR_QUESTIONS.en;
   const historyKeys = ['family','gestational','hypertension','cardiovascular','pcos','prediabetes'];
   const historyPresent = result.factors.some((factor) => historyKeys.includes(factor.key) && factor.present);
   const bodyPresent = result.factors.some((factor) => ['bmi','centralAdiposity'].includes(factor.key) && factor.present);
+  const clinicalQuestions = result.factors
+    .filter((factor) => factor.present && factorCopy[factor.key])
+    .map((factor) => ({ id: factor.key, local: factorCopy[factor.key], en: FACTOR_QUESTIONS.en[factor.key] }));
   const questions = [
-    result.routineScreeningDue && [data.lastTest === 'within1' ? 'qNext' : 'qTiming'],
-    bodyPresent && ['qAsian'],
-    historyPresent && ['qHistory'],
-    lang !== 'en' && ['qLanguage'],
-  ].filter(Boolean).flat();
+    ...(result.routineScreeningDue ? [{ id: 'timing', local: ui[data.lastTest === 'within1' ? 'qNext' : 'qTiming'], en: english[data.lastTest === 'within1' ? 'qNext' : 'qTiming'] }] : []),
+    ...clinicalQuestions,
+    ...(lang !== 'en' ? [{ id: 'language', local: ui.qLanguage, en: english.qLanguage }] : []),
+  ];
+  const discussionQuestions = questions.filter((question) => question.id !== 'language');
   const headline = result.ageOnly ? ui.ageOnly : result.discussionRecommended ? ui.discuss : ui.routine;
   const locale = { ko: 'ko-KR', zh: 'zh-CN', bn: 'bn-BD', ur: 'ur-PK', en: 'en-US' }[lang] || 'en-US';
   const screenedDate = new Date(result.screenedAt).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
@@ -123,9 +144,9 @@ function Result({ result, data, copy, english, lang, t, onRestart }) {
     '',
     headline,
     '',
-    ...questions.flatMap((key, index) => [
-      `${index + 1}. ${ui[key]}`,
-      ...(lang !== 'en' ? [`   ${english[key]}`] : []),
+    ...questions.flatMap((question, index) => [
+      `${index + 1}. ${question.local}`,
+      ...(lang !== 'en' ? [`   ${question.en}`] : []),
     ]),
     '',
     ui.notDiagnosis,
@@ -169,9 +190,10 @@ function Result({ result, data, copy, english, lang, t, onRestart }) {
         <article><h3>{ui.historyContext}</h3><p>{historyPresent ? ui.qHistory : ui.noFlag}</p></article>
         <article><h3>{ui.lifeContext}</h3><p>{lifestyleText}</p></article>
       </div>
-      <section className="visit-card"><div><p className="eyebrow">{ui.card}</p><h2>{ui.card}</h2><p>{ui.cardHelp}</p></div><ol>{questions.map((key) => <li key={key}><strong>{ui[key]}</strong>{lang !== 'en' && <span lang="en">{english[key]}</span>}</li>)}</ol><p className="visit-card__meta">AAPICHECK · {t('screener.step_age')} {data.age} · {ui.screenedOn}: {screenedDate}</p></section>
+      {discussionQuestions.length > 0 && <section className="result-discussion" aria-labelledby="discussion-title"><h2 id="discussion-title">{actionCopy.discussTitle}</h2><p>{actionCopy.discussHelp}</p><ol>{discussionQuestions.map((question) => <li key={question.id}>{question.local}</li>)}</ol></section>}
+      <section className="visit-card"><div><p className="eyebrow">{ui.card}</p><h2>{ui.card}</h2><p>{ui.cardHelp}</p></div><ol>{questions.map((question) => <li key={question.id}><strong>{question.local}</strong>{lang !== 'en' && <span lang="en">{question.en}</span>}</li>)}</ol><p className="visit-card__meta">AAPICHECK · {t('screener.step_age')} {data.age} · {ui.screenedOn}: {screenedDate}</p></section>
       <div className="card-share-panel"><p>🔒 {ui.privacyShare}</p><div className="card-share-actions"><button className="btn btn--primary" type="button" onClick={() => window.print()}>{ui.print}</button><button className="btn btn--secondary" type="button" onClick={downloadCard}>{ui.download}</button><a className="btn btn--secondary" href={emailHref}>{ui.email}</a><button className="btn btn--secondary" type="button" onClick={shareCard}>{ui.share}</button><button className="btn btn--secondary" type="button" onClick={copyCard}>{copied ? ui.copied : ui.copy}</button></div></div>
-      <div className="next-step-box"><div className="button-row"><Link className="btn btn--secondary" to="/resources">{ui.resources}</Link><button className="btn btn--secondary" type="button" onClick={onRestart}>{ui.restart}</button></div></div>
+      <section className="result-next-steps" aria-labelledby="next-steps-title"><h2 id="next-steps-title">{actionCopy.nextTitle}</h2><div className="result-next-grid"><Link to="/map"><strong>{actionCopy.findHospital}</strong><span>{actionCopy.findHospitalHelp}</span><b aria-hidden="true">→</b></Link><Link to="/compliance"><strong>{actionCopy.languageHelp}</strong><span>{actionCopy.languageHelpText}</span><b aria-hidden="true">→</b></Link><Link to="/resources"><strong>{actionCopy.communityHelp}</strong><span>{actionCopy.communityHelpText}</span><b aria-hidden="true">→</b></Link></div><button className="btn btn--secondary" type="button" onClick={onRestart}>{ui.restart}</button></section>
     </div>
   </section>;
 }
