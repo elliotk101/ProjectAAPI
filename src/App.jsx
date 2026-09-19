@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import BillBanner from './components/BillBanner';
 import ScrollToTop from './components/ScrollToTop';
 import AccessibilityTools from './components/AccessibilityTools';
+import SeoMetadata from './components/SeoMetadata';
 import LandingPage from './pages/LandingPage';
 import { useI18n } from './i18n/i18nProvider';
 
@@ -28,6 +29,7 @@ function App() {
 
   return (
     <div dir={dir}>
+      <SeoMetadata />
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <ScrollToTop />
       <Navbar />

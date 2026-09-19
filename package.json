@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-seo.mjs",
     "preview": "vite preview",
+    "test:seo-build": "node scripts/check-seo.mjs",
     "test": "node --test"
   },
   "dependencies": {
