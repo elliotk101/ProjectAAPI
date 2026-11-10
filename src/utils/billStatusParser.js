@@ -124,6 +124,7 @@ export async function fetchOfficialBillStatus({
       signal: controller.signal,
       headers: {
         Accept: 'text/html,application/xhtml+xml',
+        'User-Agent': 'node',
       },
     });
     if (!response.ok) {
