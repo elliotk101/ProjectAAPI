@@ -16,14 +16,30 @@ function BillS634B() {
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true); window.setTimeout(() => setCopied(false), 2000);
   }
-  const facts = [['01','bill.timeline_governor','bill.banner_text'],['02','bill.benefit_insurance_title','bill.benefit_insurance_desc'],['03','bill.benefit_screening_title','bill.benefit_screening_desc'],['04','bill.benefit_care_title','bill.benefit_care_desc']];
-  const timeline = [['bill.timeline_introduced','bill.timeline_introduced_desc'],['bill.timeline_senate','bill.timeline_senate_desc'],['bill.timeline_assembly','bill.timeline_assembly_desc'],['bill.timeline_governor','bill.timeline_governor_desc']];
+  const facts = [
+    ['01', 'bill.timeline_governor', 'bill.banner_text'],
+    ['02', 'bill.benefit_insurance_title', 'bill.benefit_insurance_desc'],
+    ['03', 'bill.benefit_screening_title', 'bill.benefit_screening_desc'],
+    ['04', 'bill.benefit_care_title', 'bill.benefit_care_desc'],
+  ];
+  const prepareSteps = [
+    ['01', 'bill.prepare_step1_title', 'bill.prepare_step1_desc'],
+    ['02', 'bill.prepare_step2_title', 'bill.prepare_step2_desc'],
+    ['03', 'bill.prepare_step3_title', 'bill.prepare_step3_desc'],
+  ];
+  const timeline = [
+    ['bill.timeline_introduced', 'bill.timeline_introduced_desc'],
+    ['bill.timeline_senate', 'bill.timeline_senate_desc'],
+    ['bill.timeline_assembly', 'bill.timeline_assembly_desc'],
+    ['bill.timeline_governor', 'bill.timeline_governor_desc'],
+  ];
   return <article className="bill-page">
     <header className="bill-page__hero"><div className="bill-page__hero-content"><p className="eyebrow">{t('bill.status_badge')}</p><h1>{t('bill.page_title')}</h1><p className="bill-page__hero-subtitle">{bannerText}</p><div className="status-panel"><span className="status-dot" aria-hidden="true" /><div><strong>{statusTitle}</strong><span>{t('bill.verified')} {billStatus.lastVerified}</span></div></div><div className="button-row"><a className="btn btn--primary" href={billStatus.officialUrl} target="_blank" rel="noreferrer">{t('bill.official_record')}</a><button className="btn btn--secondary" onClick={share}>{copied ? t('bill.share_copied') : t('bill.share_title')}</button></div></div></header>
-    <section className="bill-page__section bill-summary"><div><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.benefits_title')}</h2></div><div className="prose"><p>{t('bill.page_subtitle')}</p><p>{t('bill.benefit_insurance_desc')}</p></div></section>
-    <section className="bill-page__section"><p className="eyebrow">{t('bill.benefits_title')}</p><h2>{t('bill.prepare_title')}</h2><div className="fact-grid">{facts.map(([number,title,desc], index) => <article key={number}><span>{number}</span><h3>{index === 0 ? statusTitle : t(title)}</h3><p>{index === 0 ? bannerText : t(desc)}</p></article>)}</div></section>
-    <section className="bill-page__section timeline-simple"><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.timeline_title')}</h2><ol>{timeline.map(([title,desc],index) => <li key={title} className={index === 3 && billStatus.state !== 'enacted' ? 'is-current' : 'is-done'}><strong>{index === 3 ? statusTitle : t(title)}</strong><span>{index === 3 && billStatus.state !== 'awaiting-signature' ? bannerText : t(desc)}</span></li>)}</ol></section>
+    <section className="bill-page__section bill-summary"><div><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.page_title')}</h2></div><div className="prose"><p>{t('bill.page_subtitle')}</p><p>{t('bill.benefit_insurance_desc')}</p></div></section>
+    <section className="bill-page__section"><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.benefits_title')}</h2><div className="fact-grid">{facts.map(([number, title, desc], index) => <article key={number}><span>{number}</span><h3>{index === 0 ? statusTitle : t(title)}</h3><p>{index === 0 ? bannerText : t(desc)}</p></article>)}</div></section>
+    <section className="bill-page__section timeline-simple"><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.timeline_title')}</h2><ol>{timeline.map(([title, desc], index) => <li key={title} className={index === 3 && billStatus.state !== 'enacted' ? 'is-current' : 'is-done'}><strong>{index === 3 ? statusTitle : t(title)}</strong><span>{index === 3 && billStatus.state !== 'awaiting-signature' ? bannerText : t(desc)}</span></li>)}</ol></section>
     <section className="source-box"><h2>{t('bill.official_record')}</h2><p>{bannerText}</p><a href={billStatus.officialUrl} target="_blank" rel="noreferrer">{t('bill.official_record')} ↗</a></section>
+    <section className="bill-page__section"><p className="eyebrow">{t('bill.status_badge')}</p><h2>{t('bill.prepare_title')}</h2><div className="fact-grid">{prepareSteps.map(([number, title, desc]) => <article key={number}><span>{number}</span><h3>{t(title)}</h3><p>{t(desc)}</p></article>)}</div></section>
     <section className="bill-next"><h2>{t('bill.prepare_title')}</h2><p>{t('bill.prepare_step2_desc')}</p><div className="button-row"><Link className="btn btn--primary" to="/screener">{t('hero.cta_screen')}</Link><Link className="btn btn--secondary" to="/resources">{t('hero.cta_resources')}</Link></div></section>
   </article>;
 }

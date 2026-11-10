@@ -20,9 +20,18 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const Accessibility = lazy(() => import('./pages/Accessibility'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+const SHELL_COPY = {
+  en: { skip: 'Skip to main content', loading: 'Loading…' },
+  ko: { skip: '본문으로 건너뛰기', loading: '불러오는 중…' },
+  zh: { skip: '跳至主要内容', loading: '加载中…' },
+  bn: { skip: 'মূল বিষয়বস্তুতে যান', loading: 'লোড হচ্ছে…' },
+  ur: { skip: 'اصل مواد پر جائیں', loading: 'لوڈ ہو رہا ہے…' },
+};
+
 function App() {
   const location = useLocation();
-  const { dir } = useI18n();
+  const { dir, lang } = useI18n();
+  const shellCopy = SHELL_COPY[lang] || SHELL_COPY.en;
 
   // Hide the footer on the map page (full-screen map)
   const isMapPage = location.pathname === '/map';
@@ -30,13 +39,13 @@ function App() {
   return (
     <div dir={dir}>
       <SeoMetadata />
-      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <a className="skip-link" href="#main-content">{shellCopy.skip}</a>
       <ScrollToTop />
       <Navbar />
       <BillBanner />
       <AccessibilityTools />
       <main id="main-content" tabIndex="-1">
-        <Suspense fallback={<div className="page-loader" role="status">Loading…</div>}><Routes>
+        <Suspense fallback={<div className="page-loader" role="status">{shellCopy.loading}</div>}><Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/screener" element={<RiskScreener />} />
           <Route path="/map" element={<HealthMap />} />

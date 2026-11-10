@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useI18n } from '../i18n/i18nProvider';
 import { MapContainer, TileLayer, CircleMarker, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -6,17 +6,95 @@ import { NYC_NEIGHBORHOODS, HEALTH_RESOURCES } from '../services/nycOpenData';
 import { getNysHospitals, formatPhone } from '../services/nysOpenData';
 import 'leaflet/dist/leaflet.css';
 
-/* ======================================================
-   LAYER: Diabetes Prevalence
-   Color-coded by prevalence rate with 5-tier scale.
-   Size represents relative diabetes burden.
-   ====================================================== */
+// Geographic bounds to keep the map locked within NYC or NY State
+const NYC_BOUNDS = [
+  [40.47, -74.28],
+  [40.93, -73.68],
+];
+const NYS_BOUNDS = [
+  [40.45, -79.85],
+  [45.05, -71.80],
+];
+
+const MAP_LOCAL_COPY = {
+  en: {
+    clinic: 'Clinic / FQHC',
+    hospital: 'Hospital',
+    community: 'Community Org',
+    orgs: 'orgs',
+    boroughs: {
+      All: 'All',
+      Queens: 'Queens',
+      Brooklyn: 'Brooklyn',
+      Manhattan: 'Manhattan',
+      Bronx: 'Bronx',
+      'Staten Island': 'Staten Island',
+    },
+  },
+  ko: {
+    clinic: '클리닉 / 지역보건소(FQHC)',
+    hospital: '병원',
+    community: '커뮤니티 기관',
+    orgs: '개 기관',
+    boroughs: {
+      All: '전체',
+      Queens: '퀸즈',
+      Brooklyn: '브루클린',
+      Manhattan: '맨해튼',
+      Bronx: '브롱스',
+      'Staten Island': '스태튼아일랜드',
+    },
+  },
+  zh: {
+    clinic: '诊所 / 社区健康中心',
+    hospital: '医院',
+    community: '社区机构',
+    orgs: '家机构',
+    boroughs: {
+      All: '全部',
+      Queens: '皇后区',
+      Brooklyn: '布鲁克林',
+      Manhattan: '曼哈顿',
+      Bronx: '布朗克斯',
+      'Staten Island': '斯塔滕岛',
+    },
+  },
+  bn: {
+    clinic: 'ক্লিনিক / FQHC',
+    hospital: 'হাসপাতাল',
+    community: 'কমিউনিটি সংস্থা',
+    orgs: 'টি সংস্থা',
+    boroughs: {
+      All: 'সব',
+      Queens: 'কুইন্স',
+      Brooklyn: 'ব্রুকলিন',
+      Manhattan: 'ম্যানহাটন',
+      Bronx: 'ব্রঙ্কস',
+      'Staten Island': 'স্ট্যাটেন আইল্যান্ড',
+    },
+  },
+  ur: {
+    clinic: 'کلینک / FQHC',
+    hospital: 'ہسپتال',
+    community: 'کمیونٹی ادارہ',
+    orgs: 'ادارے',
+    boroughs: {
+      All: 'تمام',
+      Queens: 'کوئینز',
+      Brooklyn: 'بروکلین',
+      Manhattan: 'مین ہیٹن',
+      Bronx: 'برونکس',
+      'Staten Island': 'اسٹیٹن آئی لینڈ',
+    },
+  },
+};
+
 function getDiabetesColor(prevalence) {
-  if (prevalence >= 17) return '#dc2626'; // very high — red-600
-  if (prevalence >= 14) return '#ea580c'; // high — orange-600
-  if (prevalence >= 11) return '#d97706'; // elevated — amber-600
-  if (prevalence >= 9)  return '#65a30d'; // moderate — lime-600
-  return '#16a34a';                       // low — green-600
+  if (prevalence >= 17) return '#dc2626';
+  if (prevalence >= 14) return '#ea580c';
+  if (prevalence >= 11) return '#d97706';
+  if (prevalence >= 9)  return '#65a30d';
+  return '#16a34a';
 }
 
 function getDiabetesLabel(prevalence, t) {
@@ -27,26 +105,18 @@ function getDiabetesLabel(prevalence, t) {
   return t('map.diabetes_label_low');
 }
 
-/* ======================================================
-   LAYER: AAPI Population
-   Size = population count; Color intensity = % of total.
-   ====================================================== */
 function getAAPIColor(pct) {
-  if (pct >= 40) return '#b45309'; // deep amber
+  if (pct >= 40) return '#b45309';
   if (pct >= 25) return '#d97706';
   if (pct >= 15) return '#eab308';
   if (pct >= 8)  return '#facc15';
-  return '#fde68a';                // light amber
+  return '#fde68a';
 }
 
-/* ======================================================
-   LAYER: Health Resources
-   Custom icons by type (clinic / hospital / community).
-   ====================================================== */
 const RESOURCE_ICONS = {
-  clinic: { emoji: '🏥', color: '#22c55e', label: 'Clinic / FQHC' },
-  hospital: { emoji: '🏨', color: '#3b82f6', label: 'Hospital' },
-  community: { emoji: '🤝', color: '#a855f7', label: 'Community Org' },
+  clinic: { emoji: '🏥', color: '#22c55e', labelKey: 'clinic' },
+  hospital: { emoji: '🏨', color: '#3b82f6', labelKey: 'hospital' },
+  community: { emoji: '🤝', color: '#a855f7', labelKey: 'community' },
 };
 
 function createResourceIcon(type) {
@@ -67,23 +137,33 @@ function createResourceIcon(type) {
 }
 
 /* ======================================================
-   HELPER: Fit bounds on mount
+   HELPER: Enforce NYC / NYS bounds & fit locations
    ====================================================== */
-function FitBounds({ locations }) {
+function FitBounds({ scope, locations }) {
   const map = useMap();
   useEffect(() => {
+    const targetBounds = scope === 'nyc' ? NYC_BOUNDS : NYS_BOUNDS;
+    const minZoom = scope === 'nyc' ? 10 : 6;
+    map.setMaxBounds(null);
+    map.setMinZoom(minZoom);
+    map.setMaxZoom(18);
+
     if (locations.length > 0) {
-      const bounds = locations.map((l) => [l.lat, l.lng]);
-      map.fitBounds(bounds, { padding: [40, 40] });
+      const bounds = L.latLngBounds(locations.map((l) => [l.lat, l.lng]));
+      map.fitBounds(bounds.pad(0.08), { padding: [36, 36], maxZoom: scope === 'nyc' ? 13 : 12 });
+    } else {
+      map.fitBounds(targetBounds, { padding: [24, 24] });
     }
-  }, [locations, map]);
+
+    map.setMaxBounds(targetBounds);
+  }, [scope, locations, map]);
   return null;
 }
 
 /* ======================================================
    SIDEBAR: Context-aware detail panel
    ====================================================== */
-function Sidebar({ selected, activeLayer, onClose, t }) {
+function Sidebar({ selected, activeLayer, onClose, t, localCopy }) {
   if (!selected) return null;
 
   if (selected._type === 'nysHospital') {
@@ -118,10 +198,10 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
       <div className="map-page__sidebar">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-4)' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--fs-lg)', lineHeight: 1.3 }}>{r.name}</h3>
-          <button onClick={onClose} style={{ color: 'var(--color-text-muted)', fontSize: 'var(--fs-lg)', cursor: 'pointer', flexShrink: 0, marginLeft: 'var(--space-2)' }} aria-label="Close sidebar">✕</button>
+          <button onClick={onClose} style={{ color: 'var(--color-text-muted)', fontSize: 'var(--fs-lg)', cursor: 'pointer', flexShrink: 0, marginLeft: 'var(--space-2)' }} aria-label={t('map.close_details')}>✕</button>
         </div>
         <span className="badge" style={{ background: `${config.color}22`, color: config.color, marginBottom: 'var(--space-4)' }}>
-          {config.emoji} {config.label}
+          {config.emoji} {localCopy[config.labelKey]}
         </span>
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--fs-sm)', margin: 'var(--space-3) 0' }}>📍 {r.address}</p>
 
@@ -155,11 +235,11 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
     <div className="map-page__sidebar">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-4)' }}>
         <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--fs-lg)', lineHeight: 1.3 }}>{n.name}</h3>
-        <button onClick={onClose} style={{ color: 'var(--color-text-muted)', fontSize: 'var(--fs-lg)', cursor: 'pointer', flexShrink: 0, marginLeft: 'var(--space-2)' }} aria-label="Close sidebar">✕</button>
+        <button onClick={onClose} style={{ color: 'var(--color-text-muted)', fontSize: 'var(--fs-lg)', cursor: 'pointer', flexShrink: 0, marginLeft: 'var(--space-2)' }} aria-label={t('map.close_details')}>✕</button>
       </div>
 
       <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-4)', flexWrap: 'wrap' }}>
-        <span className="badge badge--indigo">{n.borough}</span>
+        <span className="badge badge--indigo">{localCopy.boroughs[n.borough] || n.borough}</span>
         <span className="badge" style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--color-text-muted)' }}>{n.uhf}</span>
       </div>
 
@@ -180,7 +260,6 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
             </div>
             <span className="badge" style={{ background: `${diabetesColor}22`, color: diabetesColor }}>{diabetesLabel}</span>
           </div>
-          {/* Mini bar */}
           <div style={{ marginTop: 'var(--space-2)', height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${Math.min(n.diabetesPrevalence / 25 * 100, 100)}%`, background: diabetesColor, borderRadius: 2, transition: 'width 0.5s ease' }} />
           </div>
@@ -202,7 +281,6 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
               <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--color-text-muted)' }}>{t('map.residents')}</div>
             </div>
           </div>
-          {/* Mini bar */}
           <div style={{ marginTop: 'var(--space-2)', height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${Math.min(n.aapiPopulation / 70 * 100, 100)}%`, background: 'var(--color-amber-400)', borderRadius: 2, transition: 'width 0.5s ease' }} />
           </div>
@@ -245,7 +323,8 @@ function Sidebar({ selected, activeLayer, onClose, t }) {
    MAIN MAP COMPONENT
    ====================================================== */
 function HealthMap() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const localCopy = MAP_LOCAL_COPY[lang] || MAP_LOCAL_COPY.en;
   const [scope, setScope] = useState('nyc');
   const [selected, setSelected] = useState(null);
   const [activeLayer, setActiveLayer] = useState('diabetes');
@@ -330,36 +409,40 @@ function HealthMap() {
 
         <p className="map-data-note">{scope === 'nyc' ? t('map.click_prompt') : t('map.nys_intro')}</p>
 
-        {/* Layer toggles */}
-        <div className="nyc-layer-controls" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-          {layers.map((layer) => (
-            <button
-              key={layer.key}
-              className={`chip ${activeLayer === layer.key ? 'chip--active' : ''}`}
-              onClick={() => { setActiveLayer(layer.key); setSelected(null); }}
-              aria-pressed={activeLayer === layer.key}
-              id={`layer-${layer.key}`}
-            >
-              {layer.icon} {layer.label}
-            </button>
-          ))}
-        </div>
+        {/* Layer toggles (NYC mode only) */}
+        {scope === 'nyc' && (
+          <div className="nyc-layer-controls" style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+            {layers.map((layer) => (
+              <button
+                key={layer.key}
+                className={`chip ${activeLayer === layer.key ? 'chip--active' : ''}`}
+                onClick={() => { setActiveLayer(layer.key); setSelected(null); }}
+                aria-pressed={activeLayer === layer.key}
+                id={`layer-${layer.key}`}
+              >
+                {layer.icon} {layer.label}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {/* Borough filter */}
-        <div className="nyc-borough-controls" style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-          {boroughs.map((b) => (
-            <button
-              key={b}
-              className={`chip ${boroughFilter === b ? 'chip--active' : ''}`}
-              onClick={() => setBoroughFilter(b)}
-              aria-pressed={boroughFilter === b}
-              style={{ fontSize: 'var(--fs-xs)', padding: 'var(--space-1) var(--space-3)' }}
-              id={`borough-filter-${b.toLowerCase().replace(/\s/g, '-')}`}
-            >
-              {b}
-            </button>
-          ))}
-        </div>
+        {/* Borough filter (NYC mode only) */}
+        {scope === 'nyc' && (
+          <div className="nyc-borough-controls" style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+            {boroughs.map((b) => (
+              <button
+                key={b}
+                className={`chip ${boroughFilter === b ? 'chip--active' : ''}`}
+                onClick={() => setBoroughFilter(b)}
+                aria-pressed={boroughFilter === b}
+                style={{ fontSize: 'var(--fs-xs)', padding: 'var(--space-1) var(--space-3)' }}
+                id={`borough-filter-${b.toLowerCase().replace(/\s/g, '-')}`}
+              >
+                {localCopy.boroughs[b] || b}
+              </button>
+            ))}
+          </div>
+        )}
         {scope === 'nys' && <div className="nys-map-filters">
           <label><span className="sr-only">{t('map.search_hospitals')}</span><input type="search" value={hospitalSearch} onChange={(event) => setHospitalSearch(event.target.value)} placeholder={t('map.search_placeholder')} /></label>
           <label><span className="sr-only">{t('map.county')}</span><select value={countyFilter} onChange={(event) => setCountyFilter(event.target.value)}>{counties.map((county) => <option key={county} value={county}>{county === 'All' ? t('map.all_counties') : county}</option>)}</select></label>
@@ -373,6 +456,10 @@ function HealthMap() {
         <MapContainer
           center={[40.7328, -73.8700]}
           zoom={11}
+          minZoom={10}
+          maxZoom={18}
+          maxBounds={NYC_BOUNDS}
+          maxBoundsViscosity={1.0}
           style={{ width: '100%', height: '100%', minHeight: '500px' }}
           zoomControl={true}
         >
@@ -380,7 +467,7 @@ function HealthMap() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <FitBounds locations={scope === 'nyc' ? filteredNeighborhoods : filteredHospitals} />
+          <FitBounds scope={scope} locations={scope === 'nyc' ? filteredNeighborhoods : filteredHospitals} />
 
           {/* ── DIABETES LAYER ── */}
           {scope === 'nyc' && activeLayer === 'diabetes' && filteredNeighborhoods.map((n) => {
@@ -397,7 +484,7 @@ function HealthMap() {
                 <Popup>
                   <div style={{ fontFamily: 'var(--font-body)', minWidth: 200 }}>
                     <strong style={{ fontSize: 14 }}>{n.name}</strong>
-                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{n.borough} • {n.uhf}</div>
+                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{localCopy.boroughs[n.borough] || n.borough} • {n.uhf}</div>
                     <div style={{ marginTop: 8, fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
                       <span>{t('map.popup_diabetes')}</span>
                       <strong style={{ color }}>{n.diabetesPrevalence}%</strong>
@@ -417,7 +504,6 @@ function HealthMap() {
           {/* ── AAPI POPULATION LAYER ── */}
           {scope === 'nyc' && activeLayer === 'aapi' && filteredNeighborhoods.map((n) => {
             const color = getAAPIColor(n.aapiPopulation);
-            // Size by actual count, normalized
             const maxCount = Math.max(...filteredNeighborhoods.map((x) => x.aapiCount || 0));
             const radius = Math.max(8, ((n.aapiCount || 0) / maxCount) * 28);
             return (
@@ -431,7 +517,7 @@ function HealthMap() {
                 <Popup>
                   <div style={{ fontFamily: 'var(--font-body)', minWidth: 210 }}>
                     <strong style={{ fontSize: 14 }}>{n.name}</strong>
-                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{n.borough}</div>
+                    <div style={{ fontSize: 11, color: '#888', marginTop: 2 }}>{localCopy.boroughs[n.borough] || n.borough}</div>
                     <div style={{ marginTop: 8 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
                         <span>{t('map.popup_aapi_pct')}</span>
@@ -454,9 +540,8 @@ function HealthMap() {
           })}
 
           {/* ── HEALTH RESOURCES LAYER ── */}
-          {activeLayer === 'resources' && (
+          {scope === 'nyc' && activeLayer === 'resources' && (
             <>
-              {/* Show neighborhood outlines as context */}
               {filteredNeighborhoods.map((n) => (
                 <CircleMarker
                   key={`ctx-${n.id}`}
@@ -474,7 +559,7 @@ function HealthMap() {
                   <Popup>
                     <div style={{ fontFamily: 'var(--font-body)', minWidth: 180 }}>
                       <strong style={{ fontSize: 14 }}>{n.name}</strong>
-                      <div style={{ fontSize: 11, color: '#888' }}>{n.borough}</div>
+                      <div style={{ fontSize: 11, color: '#888' }}>{localCopy.boroughs[n.borough] || n.borough}</div>
                       <div style={{ marginTop: 6, fontSize: 12, color: n.resources === 0 ? '#ef4444' : '#22c55e' }}>
                         {n.resources === 0 ? `⚠ ${t('map.gap_area')}` : `${n.resources} ${t('map.popup_resources')}`}
                       </div>
@@ -486,7 +571,6 @@ function HealthMap() {
                 </CircleMarker>
               ))}
 
-              {/* Individual resource pins */}
               {filteredResources.map((r) => (
                 <Marker
                   key={r.id}
@@ -534,88 +618,89 @@ function HealthMap() {
           activeLayer={activeLayer}
           onClose={() => setSelected(null)}
           t={t}
+          localCopy={localCopy}
         />
 
-        {/* Legend / Top-5 ranking (bottom-left overlay) */}
-        <div className={`map-ranking ${rankingOpen ? 'map-ranking--open' : 'map-ranking--closed'}`}>
-          <button type="button" className="map-ranking__toggle" onClick={() => setRankingOpen((open) => !open)}
-            aria-expanded={rankingOpen} aria-controls="map-ranking-content">
-            <span>
-              {activeLayer === 'diabetes' && `📊 ${t('map.top_areas')} — ${t('map.layer_diabetes')}`}
-              {activeLayer === 'aapi' && `👥 ${t('map.top_areas')} — ${t('map.layer_aapi')}`}
-              {activeLayer === 'resources' && `📍 ${t('map.top_areas')} — ${t('map.layer_resources')}`}
-            </span>
-            <span className="map-ranking__chevron" aria-hidden="true">⌃</span>
-          </button>
+        {/* Legend / Top-5 ranking (bottom-left overlay, NYC mode only) */}
+        {scope === 'nyc' && (
+          <div className={`map-ranking ${rankingOpen ? 'map-ranking--open' : 'map-ranking--closed'}`}>
+            <button type="button" className="map-ranking__toggle" onClick={() => setRankingOpen((open) => !open)}
+              aria-expanded={rankingOpen} aria-controls="map-ranking-content">
+              <span>
+                {activeLayer === 'diabetes' && `📊 ${t('map.top_areas')} — ${t('map.layer_diabetes')}`}
+                {activeLayer === 'aapi' && `👥 ${t('map.top_areas')} — ${t('map.layer_aapi')}`}
+                {activeLayer === 'resources' && `📍 ${t('map.top_areas')} — ${t('map.layer_resources')}`}
+              </span>
+              <span className="map-ranking__chevron" aria-hidden="true">⌃</span>
+            </button>
 
-          {rankingOpen && <div id="map-ranking-content" className="map-ranking__content">
+            {rankingOpen && <div id="map-ranking-content" className="map-ranking__content">
 
-          {sorted.map((n, i) => {
-            const val = activeLayer === 'diabetes'
-              ? `${n.diabetesPrevalence}%`
-              : activeLayer === 'aapi'
-              ? `${n.aapiPopulation}% (${n.aapiCount?.toLocaleString()})`
-              : `${n.resources} orgs`;
-            const color = activeLayer === 'diabetes'
-              ? getDiabetesColor(n.diabetesPrevalence)
-              : activeLayer === 'aapi'
-              ? getAAPIColor(n.aapiPopulation)
-              : n.resources === 0 ? '#ef4444' : '#22c55e';
+            {sorted.map((n, i) => {
+              const val = activeLayer === 'diabetes'
+                ? `${n.diabetesPrevalence}%`
+                : activeLayer === 'aapi'
+                ? `${n.aapiPopulation}% (${n.aapiCount?.toLocaleString()})`
+                : `${n.resources} ${localCopy.orgs}`;
+              const color = activeLayer === 'diabetes'
+                ? getDiabetesColor(n.diabetesPrevalence)
+                : activeLayer === 'aapi'
+                ? getAAPIColor(n.aapiPopulation)
+                : n.resources === 0 ? '#ef4444' : '#22c55e';
 
-            return (
-              <button type="button"
-                key={n.id}
-                style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '4px 0', borderBottom: i < sorted.length - 1 ? '1px solid var(--color-border)' : 'none',
-                  cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'inherit',
-                }}
-                onClick={() => setSelected(n)}
-              >
-                <span style={{ color: 'var(--color-text-secondary)' }}>
-                  <span style={{ color: 'var(--color-text-muted)', marginRight: 4 }}>{i + 1}.</span>
-                  {n.name}
-                </span>
-                <span style={{ fontWeight: 600, color, whiteSpace: 'nowrap', marginLeft: 8 }}>{val}</span>
-              </button>
-            );
-          })}
+              return (
+                <button type="button"
+                  key={n.id}
+                  style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '4px 0', borderBottom: i < sorted.length - 1 ? '1px solid var(--color-border)' : 'none',
+                    cursor: 'pointer', width: '100%', textAlign: 'left', background: 'transparent', color: 'inherit',
+                  }}
+                  onClick={() => setSelected(n)}
+                >
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    <span style={{ color: 'var(--color-text-muted)', marginRight: 4 }}>{i + 1}.</span>
+                    {n.name}
+                  </span>
+                  <span style={{ fontWeight: 600, color, whiteSpace: 'nowrap', marginLeft: 8 }}>{val}</span>
+                </button>
+              );
+            })}
 
-          {/* Color legend for diabetes mode */}
-          {activeLayer === 'diabetes' && (
-            <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-border)' }}>
-              <div style={{ display: 'flex', gap: 2, marginBottom: 4 }}>
-                {['#16a34a', '#65a30d', '#d97706', '#ea580c', '#dc2626'].map((c) => (
-                  <div key={c} style={{ flex: 1, height: 6, borderRadius: 2, background: c }} />
-                ))}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--color-text-muted)' }}>
-                <span>&lt;9%</span>
-                <span>9-11%</span>
-                <span>11-14%</span>
-                <span>14-17%</span>
-                <span>&gt;17%</span>
-              </div>
-            </div>
-          )}
-
-          {/* Resource type legend */}
-          {scope === 'nyc' && activeLayer === 'resources' && (
-            <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {Object.entries(RESOURCE_ICONS).map(([type, config]) => (
-                <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ width: 18, height: 18, borderRadius: '50%', background: config.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>{config.emoji}</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>{config.label}</span>
+            {activeLayer === 'diabetes' && (
+              <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-border)' }}>
+                <div style={{ display: 'flex', gap: 2, marginBottom: 4 }}>
+                  {['#16a34a', '#65a30d', '#d97706', '#ea580c', '#dc2626'].map((c) => (
+                    <div key={c} style={{ flex: 1, height: 6, borderRadius: 2, background: c }} />
+                  ))}
                 </div>
-              ))}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-                <span style={{ width: 18, height: 18, borderRadius: '50%', border: '2px dashed #ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8 }}>!</span>
-                <span style={{ color: '#ef4444' }}>{t('map.gap_area')} (0 {t('map.popup_resources')})</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--color-text-muted)' }}>
+                  <span>&lt;9%</span>
+                  <span>9-11%</span>
+                  <span>11-14%</span>
+                  <span>14-17%</span>
+                  <span>&gt;17%</span>
+                </div>
               </div>
-            </div>
-          )}
-          </div>}
-        </div>
+            )}
+
+            {activeLayer === 'resources' && (
+              <div style={{ marginTop: 'var(--space-3)', paddingTop: 'var(--space-3)', borderTop: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {Object.entries(RESOURCE_ICONS).map(([type, config]) => (
+                  <div key={type} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ width: 18, height: 18, borderRadius: '50%', background: config.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>{config.emoji}</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>{localCopy[config.labelKey]}</span>
+                  </div>
+                ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                  <span style={{ width: 18, height: 18, borderRadius: '50%', border: '2px dashed #ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8 }}>!</span>
+                  <span style={{ color: '#ef4444' }}>{t('map.gap_area')} (0 {t('map.popup_resources')})</span>
+                </div>
+              </div>
+            )}
+            </div>}
+          </div>
+        )}
       </div>
     </div>
   );
