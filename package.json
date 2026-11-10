@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/build-seo.mjs",
+    "verify:bill": "node scripts/verify-bill.mjs",
+    "build": "node scripts/verify-bill.mjs && vite build && node scripts/build-seo.mjs",
     "preview": "vite preview",
     "test:seo-build": "node scripts/check-seo.mjs",
     "test": "node --test"

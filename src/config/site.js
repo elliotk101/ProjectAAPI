@@ -10,7 +10,8 @@ export const BILL_STATUS = {
   code: 'S634B',
   state: 'awaiting-signature',
   label: "Passed the Legislature — awaiting the Governor's action",
-  lastVerified: 'August 25, 2026',
+  lastVerified: 'November 10, 2026',
+  lastVerifiedIso: '2026-11-10',
   officialUrl: 'https://www.nysenate.gov/legislation/bills/2025/S634/amendment/B',
   updateUrl: 'https://www.nysenate.gov/newsroom/press-releases/2026/john-c-liu/legislators-doctors-patients-rally-governor-hochul-sign',
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useI18n } from '../i18n/i18nProvider';
-import { BILL_STATUS, SITE } from '../config/site';
+import { SITE } from '../config/site';
+import { getBillCopy, useBillStatus } from '../utils/useBillStatus';
 
 const HERO_IMAGES = [
   '/aapicheck-community-hero.jpg',
@@ -18,6 +19,8 @@ const HERO_CONTROL_COPY = {
 
 function LandingPage() {
   const { t, lang } = useI18n();
+  const billStatus = useBillStatus();
+  const { statusTitle, bannerText } = getBillCopy(billStatus, t, lang);
   const [activeHero, setActiveHero] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
   const heroControlCopy = HERO_CONTROL_COPY[lang] || HERO_CONTROL_COPY.en;
@@ -107,10 +110,10 @@ function LandingPage() {
       </section>
 
       <section className="bill-home-card">
-        <div><p className="eyebrow">{t('bill.status_badge')} · {t('bill.verified')} {BILL_STATUS.lastVerified}</p><h2>{t('bill.timeline_governor')}</h2>
-          <p>{t('bill.banner_text')}</p></div>
+        <div><p className="eyebrow">{t('bill.status_badge')} · {t('bill.verified')} {billStatus.lastVerified}</p><h2>{statusTitle}</h2>
+          <p>{bannerText}</p></div>
         <div className="button-row"><Link to="/bill-s634b" className="btn btn--primary">{t('bill.banner_cta')}</Link>
-          <a className="btn btn--secondary" href={BILL_STATUS.officialUrl} target="_blank" rel="noreferrer">{t('bill.official_record')}</a></div>
+          <a className="btn btn--secondary" href={billStatus.officialUrl} target="_blank" rel="noreferrer">{t('bill.official_record')}</a></div>
       </section>
       <section className="language-home-card">
         <div><p className="eyebrow">S6288B / A387B · CHAPTER 614</p><h2>{t('compliance.info_title')}</h2><p>{t('compliance.info_text')}</p></div>
